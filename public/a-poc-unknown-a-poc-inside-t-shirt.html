@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a-poc inside t shirt - Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+</head>
+<body>
+    <main class="article">
+        <header class="article-header">
+            <a href="javascript:history.back()" class="back-arrow">&lt;</a>
+        </header>
+        <div class="header-spacer"></div>
+        <section class="article-viewer">
+            <!-- Slider main container -->
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+<div class="swiper-slide"><img src="./archive/a-poc/unknown/a-poc inside t shirt/Artboard 1.webp" alt="a-poc inside t shirt"></div>
+            <div class="swiper-slide"><img src="./archive/a-poc/unknown/a-poc inside t shirt/Artboard 2.webp" alt="a-poc inside t shirt"></div>
+            <div class="swiper-slide"><img src="./archive/a-poc/unknown/a-poc inside t shirt/Artboard 3.webp" alt="a-poc inside t shirt"></div>
+                </div>
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </section>
+        <section class="article-details">
+            <p>a-poc</p>
+            <p>unknown</p>
+            <p></p>
+            <p></p>
+        </section>
+    </main>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
+</body>
+</html>

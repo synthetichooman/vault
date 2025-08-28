@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+</head>
+<body>
+    <!-- Main content of the article page -->
+    <main class="article">
+        <header class="article-header">
+            <!-- This link will act as a browser back button -->
+            <a href="javascript:history.back()" class="back-arrow">&lt;</a>
+        </header>
+
+        <div class="header-spacer"></div>
+
+        <section class="article-viewer">
+            <!-- Slider main container -->
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 1.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 2.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 3.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 4.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 5.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 6.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 10.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 11.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+            <div class="swiper-slide"><img src="archive/allegri/martin margiela/puckered jacquard jacket/Artboard 12.webp" alt="Puckered Jacquard Jacket by Martin Margiela for Allegri"></div>
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </section>
+        <section class="article-details">
+            <h3>Puckered Jacquard Jacket</h3>
+            <p>allegri</p>
+            <p>martin margiela</p>
+            <p>&lt;era&gt;</p>
+            <p>&lt;status&gt;</p>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            // Optional parameters
+            loop: true,
+
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
+</body>
+</html>

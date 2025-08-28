@@ -1,0 +1,144 @@
+/* Basic Reset & Body Style */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    background-color: #ffffff; /* Changed to white */
+    color: rgba(51, 51, 51, 0.7);
+}
+
+/* Page-level containers for Vault and Article */
+.vault, .article {
+    padding: 20px;
+    max-width: 800px; /* Set a max-width for better readability on larger screens */
+    margin: 0 auto; /* Center the content */
+}
+
+.vault-header, .article-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.vault-header {
+    justify-content: center; /* Center the stats bar */
+}
+
+.stats-bar {
+    display: flex;
+    gap: 15px; /* Space between the stat numbers */
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.header-spacer {
+    height: 200px;
+}
+
+.vault-header .back-arrow, .article-header .back-arrow {
+    text-decoration: none;
+    color: #888;
+    font-size: 1.5rem;
+}
+
+/* Grid for thumbnails - Mobile First (2 columns) */
+.vault-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.vault-item-link {
+    text-decoration: none;
+    display: block;
+}
+
+.vault-item {
+    background-color: #e0e0e0;
+    aspect-ratio: 4 / 5;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    overflow: hidden; /* Hide any part of the image that might overflow */
+}
+
+.vault-item:hover {
+    opacity: 0.8;
+}
+
+.vault-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the container, cropping if necessary */
+}
+
+/* Article Page Styles */
+.article-viewer {
+    margin-bottom: 20px;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+}
+
+.article-details p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* --- Responsive Media Queries --- */
+
+/* Tablet: 2 columns for vault */
+@media (min-width: 768px) {
+    .vault-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop: 4 columns for vault and wider container */
+@media (min-width: 1024px) {
+    .vault, .article {
+        max-width: 1200px;
+    }
+
+    .vault-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Custom Swiper Navigation Styles */
+.swiper-button-next,
+.swiper-button-prev {
+    --swiper-navigation-color: #000000; /* Black color for arrows */
+    opacity: 0.1; /* 10% opacity */
+    transition: opacity 0.3s ease; /* Add a transition for hover effect */
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    opacity: 0.5;
+}
