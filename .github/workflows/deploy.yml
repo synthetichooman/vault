@@ -22,9 +22,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./web dev via figma
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,8 +34,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload the public directory from the subdirectory
-          path: './web dev via figma/public'
+          # Upload the public directory
+          path: './public'
 
   deploy:
     environment:
