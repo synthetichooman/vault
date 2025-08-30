@@ -191,6 +191,12 @@ def main():
             shutil.copytree(src_path, dest_path)
     print("Copied static assets.")
 
+    # Copy CNAME file if it exists
+    cname_path = os.path.join(SRC_DIR, 'CNAME')
+    if os.path.exists(cname_path):
+        shutil.copy(cname_path, OUTPUT_DIR)
+        print("Copied CNAME file.")
+
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(OUTPUT_DIR):
         for f in filenames:

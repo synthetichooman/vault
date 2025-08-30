@@ -55,6 +55,36 @@
           "details": "Created a new GitHub Actions workflow to build and deploy the site. Subsequently fixed the workflow to handle the project being in a subdirectory of the main git repository, and then corrected it again after the repository structure was fixed."
         }
       ]
+    },
+    {
+      "date": "2025-08-30",
+      "summary": "Added site-wide footer, favicon, and standardized titles. Postponed custom domain setup.",
+      "changes": [
+        {
+          "type": "feature",
+          "component": "build.py, css/style.css",
+          "summary": "Added a site-wide footer with Instagram link.",
+          "details": "Added a footer to all pages, styled it to match the header, and included an external link to Instagram."
+        },
+        {
+          "type": "feature",
+          "component": "build.py, assets",
+          "summary": "Implemented site-wide favicon.",
+          "details": "Created an assets directory, configured the build script to copy it, and linked the favicon in the HTML head for all pages."
+        },
+        {
+          "type": "style",
+          "component": "build.py",
+          "summary": "Standardized site titles and enforced lowercase text rule.",
+          "details": "Changed all page titles to a consistent '[brand] - hooman' format and saved a rule to use only lowercase for future frontend text."
+        }
+      ],
+      "todo": [
+        {
+          "task": "Complete custom domain setup (Gabia)",
+          "details": "Guide user through creating a CNAME file, updating build.py to include it, and configuring DNS records (A, CNAME) on Gabia to point to GitHub Pages."
+        }
+      ]
     }
   ]
 }
