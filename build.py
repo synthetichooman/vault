@@ -7,7 +7,7 @@ from datetime import datetime
 SRC_DIR = '.'
 ARCHIVE_DIR = os.path.join(SRC_DIR, 'archive')
 OUTPUT_DIR = os.path.join(SRC_DIR, 'public')
-STATIC_DIRS = ['css', 'js', 'archive']
+STATIC_DIRS = ['css', 'js', 'archive', 'assets']
 
 # --- HTML TEMPLATES ---
 
@@ -28,8 +28,9 @@ def create_index_html(products, stats):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vault - Portfolio</title>
+    <title>vault - hooman</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
 </head>
 <body>
     <header class="vault-header">
@@ -70,8 +71,9 @@ def create_article_html(product):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{product['product_name']} - Portfolio</title>
+    <title>{product['brand']} - hooman</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 </head>
 <body>
