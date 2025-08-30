@@ -50,6 +50,7 @@ def create_index_html(products, stats):
     <footer class="main-footer">
         <div class="footer-bar">
             <p>suggestions for corrections and image redistribution are welcome</p>
+            <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
         </div>
     </footer>
 </body>
@@ -112,6 +113,7 @@ def create_article_html(product):
     <footer class="main-footer">
         <div class="footer-bar">
             <p>suggestions for corrections and image redistribution are welcome</p>
+            <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
         </div>
     </footer>
 </body>
