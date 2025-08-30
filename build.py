@@ -40,9 +40,8 @@ def create_index_html(products, stats):
     <main class="vault">
         <div class="header-spacer"></div>
         <nav class="main-nav">
-            <a href="index.html" class="active">ARCHIVE</a>
-            <a href="#">ABOUT</a>
-            <a href="#">ETC</a>
+            <a href="index.html" class="active">vault</a>
+            <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
         </nav>
         <div class="vault-grid">
             {'' .join(list_items)}
