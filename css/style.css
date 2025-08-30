@@ -130,6 +130,24 @@ body {
     }
 }
 
+/* Main Navigation Styles */
+.main-nav {
+    text-align: center;
+    margin-bottom: 40px; /* Space before the grid */
+}
+
+.main-nav a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 4px 0;
+    font-size: 0.9rem;
+}
+
+.main-nav a.active {
+    text-decoration: underline;
+}
+
 /* Custom Swiper Navigation Styles */
 .swiper-button-next,
 .swiper-button-prev {
