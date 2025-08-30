@@ -1,2 +1,2 @@
-era: 
-status: 
+era: 2006 ss rtw
+status: not for sale

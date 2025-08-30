@@ -39,8 +39,13 @@ def create_index_html(products, stats):
     </header>
     <main class="vault">
         <div class="header-spacer"></div>
+        <nav class="main-nav">
+            <a href="index.html" class="active">ARCHIVE</a>
+            <a href="#">ABOUT</a>
+            <a href="#">ETC</a>
+        </nav>
         <div class="vault-grid">
-            {''.join(list_items)}
+            {'' .join(list_items)}
         </div>
     </main>
 </body>
