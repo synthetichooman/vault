@@ -172,7 +172,8 @@ body {
 
 /* Footer Styles */
 .main-footer {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     padding: 60px 20px;
 }
 
