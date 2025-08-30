@@ -49,7 +49,7 @@ def create_index_html(products, stats):
     </main>
     <footer class="main-footer">
         <div class="footer-bar">
-            <p>suggestions for corrections and image redistribution are welcome.</p>
+            <p>suggestions for corrections and image redistribution are welcome</p>
         </div>
     </footer>
 </body>
@@ -111,7 +111,7 @@ def create_article_html(product):
     </script>
     <footer class="main-footer">
         <div class="footer-bar">
-            <p>suggestions for corrections and image redistribution are welcome.</p>
+            <p>suggestions for corrections and image redistribution are welcome</p>
         </div>
     </footer>
 </body>
