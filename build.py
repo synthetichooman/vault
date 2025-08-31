@@ -45,19 +45,19 @@ def create_index_html(products, stats):
     category_filter_html = '<div id="category-filter" class="filter-controls" style="display: none;">'
     category_filter_html += '<span class="filter-label">category</span>'
     for cat in sorted(list(all_categories)):
-        category_filter_html += f'''
+        category_filter_html += f'''<span class="filter-option">
             <input type="checkbox" id="cat-{cat}" name="category-filter" value="{cat}">
             <label for="cat-{cat}">{cat}</label>
-        '''
+        </span>'''
     category_filter_html += '</div>'
 
     size_filter_html = '<div id="size-filter" class="filter-controls" style="display: none;">'
     size_filter_html += '<span class="filter-label">size</span>'
     for size in sorted(list(all_sizes)):
-        size_filter_html += f'''
+        size_filter_html += f'''<span class="filter-option">
             <input type="checkbox" id="size-{size}" name="size-filter" value="{size}">
             <label for="size-{size}">{size}</label>
-        '''
+        </span>'''
     size_filter_html += '</div>'
 
     # --- Create JS ---
@@ -382,10 +382,14 @@ def main():
                                         'era': product_info.get('era', ''),
                                         'status': product_info.get('status', ''),
                                         'category': product_info.get('category', 'other'),
-                                        'size': product_info.get('size', 'n/a')
+                                        'size': product_info.get('size', 'n/a'),
+                                        'mtime': os.path.getmtime(product_path)
                                     }
                                     products.append(product_data)
     print(f"Found {len(products)} products.")
+
+    # Sort products by modification time (newest first)
+    products.sort(key=lambda p: p['mtime'], reverse=True)
 
     for product in products:
         html_content = create_article_html(product)

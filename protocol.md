@@ -97,16 +97,22 @@
           "details": "Implemented a checkbox on index.html that uses JavaScript to hide products with a 'sold' status, allowing users to filter the main grid."
         },
         {
-          "type": "refactor",
+          "type": 'refactor',
           "component": "build.py",
-          "summary": "Extended data model with 'category' field.",
-          "details": "Updated the build script to process a new 'category' field from info.txt (top, bottom, etc.) and added a corresponding 'data-category' attribute to each product in the HTML for future filtering enhancements."
+          "summary": "Extended data model with 'category' and 'size' fields.",
+          "details": "Updated the build script to process new 'category' and 'size' fields from info.txt and added corresponding data attributes to each product in the HTML for future filtering enhancements."
         },
         {
           "type": "feature",
           "component": "build.py",
           "summary": "Built an extensible, multi-platform Easter egg framework.",
-          "details": "Implemented a scalable system for secret user interactions. The initial implementation includes two eggs: a Matrix-style animation and a red-text toggle. Each has a unique trigger for both keyboard (Konami code variations) and mobile (tap-based triggers on specific elements or the page body). The framework is designed for easy addition of future secrets."
+          "details": "Implemented a scalable system for secret user interactions. The initial implementation includes two eggs (Matrix animation, red-text toggle) and a hidden filter UI. Each has a unique trigger for both keyboard and mobile, and the framework is designed for easy addition of future secrets."
+        },
+        {
+          "type": "style",
+          "component": "build.py, css/style.css",
+          "summary": "Refined hidden filter UI for mobile.",
+          "details": "Adjusted the CSS and HTML structure of the hidden category/size filters to improve layout on mobile devices. Wrapped checkbox/label pairs to prevent unwanted line breaks and adjusted font styles for better consistency."
         }
       ]
     }
