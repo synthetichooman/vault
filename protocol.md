@@ -88,7 +88,7 @@
     },
     {
       "date": "2025-08-31",
-      "summary": "Client-side filtering and data model extension.",
+      "summary": "Client-side filtering, data model extension, and interactive Easter egg.",
       "changes": [
         {
           "type": "feature",
@@ -101,6 +101,12 @@
           "component": "build.py",
           "summary": "Extended data model with 'category' field.",
           "details": "Updated the build script to process a new 'category' field from info.txt (top, bottom, etc.) and added a corresponding 'data-category' attribute to each product in the HTML for future filtering enhancements."
+        },
+        {
+          "type": "feature",
+          "component": "build.py",
+          "summary": "Added interactive Easter egg with multi-platform trigger.",
+          "details": "Implemented a Matrix-style animation Easter egg. On desktop, it's triggered by the Konami keyboard code. For mobile, it uses a more robust 13-tap trigger on non-interactive elements. This foundational script can be extended for future Easter eggs or redirects."
         }
       ]
     }

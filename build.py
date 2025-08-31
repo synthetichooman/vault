@@ -86,71 +86,92 @@ def create_index_html(products, stats):
     </main>
     <footer class="main-footer">
         <div class="footer-bar">
-            <p>suggestions for corrections and image redistribution are welcome</p>
+            <p>suggestions for corrections and image redistribution are <span id="welcome-trigger">welcome</span></p>
             <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
         </div>
     </footer>
     {filter_script}
     <script>
-        // Konami Code Easter Egg: Matrix Rain (for Keyboard and Touch)
-        const konamiCode = [
-            'arrowup', 'arrowup', 'arrowdown', 'arrowdown', 
-            'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 
-            'b', 'a'
-        ];
-        let konamiIndex = 0;
+        // --- Easter Egg Framework ---
+        const easterEggs = {{
+            matrix: {{
+                keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'],
+                mobile: {{ type: 'tap_anywhere', count: 13 }}
+            }},
+            red_text: {{
+                keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'],
+                mobile: {{ type: 'tap_element', elementId: 'welcome-trigger', count: 10 }}
+            }}
+        }};
 
-        // --- Keyboard Listener ---
+        // --- Keyboard Listener (handles multiple codes) ---
+        let keyHistory = [];
         document.addEventListener('keydown', (e) => {{
-            const requiredKey = konamiCode[konamiIndex];
-            if (e.key.toLowerCase() === requiredKey) {{
-                konamiIndex++;
-                if (konamiIndex === konamiCode.length) {{
-                    konamiIndex = 0;
-                    triggerMatrixRain();
+            keyHistory.push(e.key.toLowerCase());
+            if (keyHistory.length > 10) {{
+                keyHistory.shift(); // Keep history to the length of the longest code
+            }}
+
+            for (const egg in easterEggs) {{
+                const requiredSequence = easterEggs[egg].keyboard;
+                if (keyHistory.join('') === requiredSequence.join('')) {{
+                    window[easterEggs[egg].callback]();
+                    keyHistory = []; // Reset history after successful entry
                 }}
-            }} else {{
-                konamiIndex = 0;
             }}
         }});
 
-        // --- Mobile 13-Tap Listener ---
-        let tapCount = 0;
-        let lastTap = 0;
-        const tapThreshold = 13;
-        const tapTimeout = 800; // milliseconds
+        // --- Mobile Tap Listeners ---
+        let tapAnywhereCount = 0;
+        let lastTapAnywhere = 0;
+        const tapTimeout = 800; // ms
 
         document.addEventListener('click', (e) => {{
-            // Ignore clicks on links, buttons, or inputs
-            if (e.target.closest('a, button, input')) {{
-                return;
-            }}
+            if (e.target.closest('a, button, input')) return;
+            if (e.target.id === easterEggs.red_text.mobile.elementId) return; // Don't count welcome taps here
 
             const now = new Date().getTime();
-            if (now - lastTap > tapTimeout) {{
-                tapCount = 1; // Reset and count this tap as the first
+            if (now - lastTapAnywhere > tapTimeout) {{
+                tapAnywhereCount = 1;
             }} else {{
-                tapCount++;
+                tapAnywhereCount++;
             }}
-            
-            lastTap = now;
+            lastTapAnywhere = now;
 
-            if (tapCount >= tapThreshold) {{
-                tapCount = 0;
+            if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {{
+                tapAnywhereCount = 0;
                 triggerMatrixRain();
             }}
         }});
 
+        let tapElementCount = 0;
+        let lastTapElement = 0;
+        const welcomeTrigger = document.getElementById(easterEggs.red_text.mobile.elementId);
+        if (welcomeTrigger) {{
+            welcomeTrigger.addEventListener('click', () => {{
+                const now = new Date().getTime();
+                if (now - lastTapElement > tapTimeout) {{
+                    tapElementCount = 1;
+                }} else {{
+                    tapElementCount++;
+                }}
+                lastTapElement = now;
+
+                if (tapElementCount >= easterEggs.red_text.mobile.count) {{
+                    tapElementCount = 0;
+                    toggleRedText();
+                }}
+            }});
+        }}
+
+        // --- Easter Egg Effect Functions ---
 
         function triggerMatrixRain() {{
-            // Prevent multiple instances
             if (document.querySelector('.matrix-canvas')) return;
-
             const canvas = document.createElement('canvas');
             canvas.classList.add('matrix-canvas');
             document.body.appendChild(canvas);
             const ctx = canvas.getContext('2d');
-
             canvas.style.position = 'fixed';
             canvas.style.top = '0';
             canvas.style.left = '0';
@@ -158,56 +179,52 @@ def create_index_html(products, stats):
             canvas.style.height = '100vh';
             canvas.style.zIndex = '9999';
             canvas.style.pointerEvents = 'none';
-
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
-            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const nums = '0123456789';
-            const alphabet = katakana + latin + nums;
-
+            const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             const fontSize = 16;
             const columns = canvas.width / fontSize;
             const rainDrops = [];
-
-            for (let x = 0; x < columns; x++) {{
-                rainDrops[x] = 1;
-            }}
-
+            for (let x = 0; x < columns; x++) {{ rainDrops[x] = 1; }}
             let animationFrameId;
-            const duration = 10000; // 10 seconds
+            const duration = 10000;
             const startTime = Date.now();
-
             const draw = () => {{
                 if (Date.now() - startTime > duration) {{
                     cancelAnimationFrame(animationFrameId);
-                    if (document.body.contains(canvas)) {{
-                        document.body.removeChild(canvas);
-                    }}
+                    if (document.body.contains(canvas)) document.body.removeChild(canvas);
                     return;
                 }}
-
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.fillStyle = '#0F0'; // Green text
+                ctx.fillStyle = '#0F0';
                 ctx.font = fontSize + 'px monospace';
-
                 for (let i = 0; i < rainDrops.length; i++) {{
                     const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                     ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {{
-                        rainDrops[i] = 0;
-                    }}
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
                     rainDrops[i]++;
                 }}
                 animationFrameId = requestAnimationFrame(draw);
             }};
-
             draw();
         }}
+
+        function toggleRedText() {{
+            const styleId = 'red-text-easter-egg';
+            if (!document.getElementById(styleId)) {{
+                const style = document.createElement('style');
+                style.id = styleId;
+                style.innerHTML = `.red-text-mode, .red-text-mode * {{ color: red !important; }}`;
+                document.head.appendChild(style);
+            }}
+            document.body.classList.toggle('red-text-mode');
+        }}
+
+        // Bind callbacks to the config object for keyboard listener
+        easterEggs.matrix.callback = 'triggerMatrixRain';
+        easterEggs.red_text.callback = 'toggleRedText';
+
     </script>
 </body>
 </html>'''
