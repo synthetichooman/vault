@@ -14,12 +14,16 @@ STATIC_DIRS = ['css', 'js', 'archive', 'assets']
 def create_index_html(products, stats):
     # --- Create Product Grid Items ---
     list_items = []
+    all_sizes = set()
     for product in products:
-        # Add data attributes for filtering
         status = product.get('status', '').lower()
         category = product.get('category', '').lower()
+        size = product.get('size', 'n/a').lower()
+        if size != 'n/a':
+            all_sizes.add(size)
+        
         list_items.append(f'''
-            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}" data-category="{category}">
+            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}" data-category="{category}" data-size="{size}">
                 <div class="vault-item">
                     <img src="{product['thumbnail']}" alt="{product['product_name']}" loading="lazy">
                 </div>
@@ -27,144 +31,131 @@ def create_index_html(products, stats):
     
     stats_text = f'{stats["product_count"]} articles, {stats["last_updated"]}, {stats["total_size"]}'
 
-    # --- Filter UI and Script ---
-    filter_ui_html = '''
+    # --- Create Filter UI --- 
+    available_filter_html = '''
         <div class="filter-controls">
             <input type="checkbox" id="available-only-filter" name="available-only-filter">
             <label for="available-only-filter">show only available</label>
         </div>
     '''
 
-    filter_script = '''
+    size_filter_html = '<div id="size-filter" class="filter-controls" style="display: none;">'
+    size_filter_html += '<span class="filter-label">size:</span>'
+    for size in sorted(list(all_sizes)):
+        size_filter_html += f'''
+            <input type="checkbox" id="size-{size}" name="size-filter" value="{size}">
+            <label for="size-{size}">{size}</label>
+        '''
+    size_filter_html += '</div>'
+
+    # --- Create JS ---
+    script_html = f'''
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterCheckbox = document.getElementById('available-only-filter');
+        document.addEventListener('DOMContentLoaded', function() {{
+            // --- Available Filter Logic ---
+            const availableCheckbox = document.getElementById('available-only-filter');
             const vaultItems = document.querySelectorAll('.vault-item-link');
+            availableCheckbox.addEventListener('change', updateFilters);
 
-            filterCheckbox.addEventListener('change', function() {
-                const showOnlyAvailable = this.checked;
+            // --- Size Filter Logic ---
+            const sizeFilterContainer = document.getElementById('size-filter');
+            const sizeCheckboxes = document.querySelectorAll('input[name="size-filter"]');
+            sizeCheckboxes.forEach(box => box.addEventListener('change', updateFilters));
 
-                vaultItems.forEach(item => {
+            function updateFilters() {{
+                const showOnlyAvailable = availableCheckbox.checked;
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
+
+                vaultItems.forEach(item => {{
                     const status = item.dataset.status;
-                    if (showOnlyAvailable && status === 'sold') {
-                        item.style.display = 'none';
-                    } else {
+                    const size = item.dataset.size;
+                    
+                    const availableMatch = !showOnlyAvailable || status !== 'sold';
+                    const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
+
+                    if (availableMatch && sizeMatch) {{
                         item.style.display = 'block';
-                    }
-                });
-            });
-        });
-    </script>
-    '''
-
-    # --- Final HTML Assembly ---
-    return f'''<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vault - hooman</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="assets/favicon.png" type="image/png">
-</head>
-<body>
-    <header class="vault-header">
-        <div class="stats-bar">
-            <p>{stats_text}</p>
-        </div>
-    </header>
-    <main class="vault">
-        <div class="header-spacer"></div>
-        <nav class="main-nav">
-            <a href="index.html" class="active">vault</a>
-            <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
-        </nav>
-        {filter_ui_html}
-        <div class="vault-grid">
-            {'' .join(list_items)}
-        </div>
-    </main>
-    <footer class="main-footer">
-        <div class="footer-bar">
-            <p>suggestions for corrections and image redistribution are <span id="welcome-trigger">welcome</span></p>
-            <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
-        </div>
-    </footer>
-    {filter_script}
-    <script>
-        // --- Easter Egg Framework ---
-        const easterEggs = {{
-            matrix: {{
-                keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'],
-                mobile: {{ type: 'tap_anywhere', count: 13 }}
-            }},
-            red_text: {{
-                keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'],
-                mobile: {{ type: 'tap_element', elementId: 'welcome-trigger', count: 10 }}
-            }}
-        }};
-
-        // --- Keyboard Listener (handles multiple codes) ---
-        let keyHistory = [];
-        document.addEventListener('keydown', (e) => {{
-            keyHistory.push(e.key.toLowerCase());
-            if (keyHistory.length > 10) {{
-                keyHistory.shift(); // Keep history to the length of the longest code
+                    }} else {{
+                        item.style.display = 'none';
+                    }}
+                }});
             }}
 
-            for (const egg in easterEggs) {{
-                const requiredSequence = easterEggs[egg].keyboard;
-                if (keyHistory.join('') === requiredSequence.join('')) {{
-                    window[easterEggs[egg].callback]();
-                    keyHistory = []; // Reset history after successful entry
-                }}
-            }}
-        }});
+            // --- Easter Egg Framework ---
+            const easterEggs = {{
+                matrix: {{ keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'], mobile: {{ type: 'tap_anywhere', count: 13 }}, callback: triggerMatrixRain }},
+                red_text: {{ keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'], mobile: {{ type: 'tap_element', elementId: 'welcome-trigger', count: 10 }}, callback: toggleRedText }},
+                size_filter: {{ keyboard: ['arrowleft', 'arrowleft', 'arrowleft', 'arrowright'], mobile: {{ type: 'toggle_element', elementId: 'available-only-filter', count: 4 }}, callback: toggleSizeFilter }}
+            }};
 
-        // --- Mobile Tap Listeners ---
-        let tapAnywhereCount = 0;
-        let lastTapAnywhere = 0;
-        const tapTimeout = 800; // ms
-
-        document.addEventListener('click', (e) => {{
-            if (e.target.closest('a, button, input')) return;
-            if (e.target.id === easterEggs.red_text.mobile.elementId) return; // Don't count welcome taps here
-
-            const now = new Date().getTime();
-            if (now - lastTapAnywhere > tapTimeout) {{
-                tapAnywhereCount = 1;
-            }} else {{
-                tapAnywhereCount++;
-            }}
-            lastTapAnywhere = now;
-
-            if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {{
-                tapAnywhereCount = 0;
-                triggerMatrixRain();
-            }}
-        }});
-
-        let tapElementCount = 0;
-        let lastTapElement = 0;
-        const welcomeTrigger = document.getElementById(easterEggs.red_text.mobile.elementId);
-        if (welcomeTrigger) {{
-            welcomeTrigger.addEventListener('click', () => {{
-                const now = new Date().getTime();
-                if (now - lastTapElement > tapTimeout) {{
-                    tapElementCount = 1;
-                }} else {{
-                    tapElementCount++;
-                }}
-                lastTapElement = now;
-
-                if (tapElementCount >= easterEggs.red_text.mobile.count) {{
-                    tapElementCount = 0;
-                    toggleRedText();
+            // Keyboard Listener
+            let keyHistory = [];
+            document.addEventListener('keydown', (e) => {{
+                keyHistory.push(e.key.toLowerCase());
+                if (keyHistory.length > 10) keyHistory.shift();
+                for (const egg in easterEggs) {{
+                    if (keyHistory.join('').endsWith(easterEggs[egg].keyboard.join(''))) {{
+                        easterEggs[egg].callback();
+                        keyHistory = [];
+                        return;
+                    }}
                 }}
             }});
-        }}
+
+            // Mobile Listeners
+            let tapAnywhereCount = 0, lastTapAnywhere = 0;
+            let tapElementCount = 0, lastTapElement = 0;
+            let toggleCount = 0, lastToggle = 0;
+            const tapTimeout = 800; // ms
+
+            document.addEventListener('click', (e) => {{
+                const now = new Date().getTime();
+                // Listener for tap anywhere (Matrix)
+                if (!e.target.closest('a, button, input, label')) {{
+                    if (now - lastTapAnywhere > tapTimeout) tapAnywhereCount = 1; else tapAnywhereCount++;
+                    lastTapAnywhere = now;
+                    if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {{
+                        tapAnywhereCount = 0;
+                        easterEggs.matrix.callback();
+                    }}
+                }}
+                // Listener for welcome trigger (Red Text)
+                if (e.target.id === easterEggs.red_text.mobile.elementId) {{
+                    if (now - lastTapElement > tapTimeout) tapElementCount = 1; else tapElementCount++;
+                    lastTapElement = now;
+                    if (tapElementCount >= easterEggs.red_text.mobile.count) {{
+                        tapElementCount = 0;
+                        easterEggs.red_text.callback();
+                    }}
+                }}
+            }});
+            
+            // Listener for toggle checkbox (Size Filter)
+            const toggleTrigger = document.getElementById(easterEggs.size_filter.mobile.elementId);
+            if (toggleTrigger) {{
+                toggleTrigger.addEventListener('change', () => {{
+                    const now = new Date().getTime();
+                    if (now - lastToggle > tapTimeout * 2) toggleCount = 1; else toggleCount++;
+                    lastToggle = now;
+                    if (toggleCount >= easterEggs.size_filter.mobile.count) {{
+                        toggleCount = 0;
+                        easterEggs.size_filter.callback();
+                    }}
+                }});
+            }}
+        }});
 
         // --- Easter Egg Effect Functions ---
+        function toggleSizeFilter() {{
+            const filter = document.getElementById('size-filter');
+            if (filter) {{
+                const isHidden = filter.style.display === 'none';
+                filter.style.display = isHidden ? 'block' : 'none';
+            }}
+        }}
+
+        function triggerMatrixRain() {{ /* ... existing function ... */ }}
+        function toggleRedText() {{ /* ... existing function ... */ }}
 
         function triggerMatrixRain() {{
             if (document.querySelector('.matrix-canvas')) return;
@@ -220,12 +211,44 @@ def create_index_html(products, stats):
             }}
             document.body.classList.toggle('red-text-mode');
         }}
-
-        // Bind callbacks to the config object for keyboard listener
-        easterEggs.matrix.callback = 'triggerMatrixRain';
-        easterEggs.red_text.callback = 'toggleRedText';
-
     </script>
+    '''
+
+    # --- Final HTML Assembly ---
+    return f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vault - hooman</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+</head>
+<body>
+    <header class="vault-header">
+        <div class="stats-bar">
+            <p>{stats_text}</p>
+        </div>
+    </header>
+    <main class="vault">
+        <div class="header-spacer"></div>
+        <nav class="main-nav">
+            <a href="index.html" class="active">vault</a>
+            <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
+        </nav>
+        {available_filter_html}
+        {size_filter_html}
+        <div class="vault-grid">
+            {'' .join(list_items)}
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="footer-bar">
+            <p>suggestions for corrections and image redistribution are <span id="welcome-trigger">welcome</span></p>
+            <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
+        </div>
+    </footer>
+    {script_html}
 </body>
 </html>'''
 
@@ -325,7 +348,7 @@ def main():
                                                 product_info[key.strip().lower()] = value.strip()
                                 else:
                                     with open(info_path, 'w', encoding='utf-8') as f:
-                                        f.write("era: \nstatus: \ncategory: \n")
+                                        f.write("era: \nstatus: \ncategory: \nsize: \n")
                                     print(f"Created missing 'info.txt' in {product_path}")
 
                                 images = sorted([
@@ -345,7 +368,8 @@ def main():
                                         'html_file': f"{product_slug}.html",
                                         'era': product_info.get('era', ''),
                                         'status': product_info.get('status', ''),
-                                        'category': product_info.get('category', 'other')
+                                        'category': product_info.get('category', 'other'),
+                                        'size': product_info.get('size', 'n/a')
                                     }
                                     products.append(product_data)
     print(f"Found {len(products)} products.")

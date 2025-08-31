@@ -88,7 +88,7 @@
     },
     {
       "date": "2025-08-31",
-      "summary": "Client-side filtering, data model extension, and interactive Easter egg.",
+      "summary": "Client-side filtering, data model extension, and an extensible Easter egg framework.",
       "changes": [
         {
           "type": "feature",
@@ -105,8 +105,8 @@
         {
           "type": "feature",
           "component": "build.py",
-          "summary": "Added interactive Easter egg with multi-platform trigger.",
-          "details": "Implemented a Matrix-style animation Easter egg. On desktop, it's triggered by the Konami keyboard code. For mobile, it uses a more robust 13-tap trigger on non-interactive elements. This foundational script can be extended for future Easter eggs or redirects."
+          "summary": "Built an extensible, multi-platform Easter egg framework.",
+          "details": "Implemented a scalable system for secret user interactions. The initial implementation includes two eggs: a Matrix-style animation and a red-text toggle. Each has a unique trigger for both keyboard (Konami code variations) and mobile (tap-based triggers on specific elements or the page body). The framework is designed for easy addition of future secrets."
         }
       ]
     }

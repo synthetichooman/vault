@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>3 articles, 2025.08.31 15:47:43, 7933KB</p>
+            <p>3 articles, 2025.08.31 16:09:39, 7934KB</p>
         </div>
     </header>
     <main class="vault">
@@ -25,19 +25,20 @@
             <label for="available-only-filter">show only available</label>
         </div>
     
+        <div id="size-filter" class="filter-controls" style="display: none;"><span class="filter-label">size:</span></div>
         <div class="vault-grid">
             
-            <a href="menichetti-reberto-menichetti-joghurt.html" class="vault-item-link" data-status="not for sale" data-category="bottom">
+            <a href="menichetti-reberto-menichetti-joghurt.html" class="vault-item-link" data-status="not for sale" data-category="bottom" data-size="n/a">
                 <div class="vault-item">
                     <img src="./archive/menichetti/reberto menichetti/joghurt/Artboard 1.webp" alt="joghurt" loading="lazy">
                 </div>
             </a>
-            <a href="a-poc-dai-fujiwara-a-poc-inside-t-shirt.html" class="vault-item-link" data-status="sold" data-category="top">
+            <a href="a-poc-dai-fujiwara-a-poc-inside-t-shirt.html" class="vault-item-link" data-status="sold" data-category="top" data-size="n/a">
                 <div class="vault-item">
                     <img src="./archive/a-poc/dai fujiwara/a-poc inside t shirt/Artboard 1.webp" alt="a-poc inside t shirt" loading="lazy">
                 </div>
             </a>
-            <a href="allegri-martin-margiela-puckered-jacquard-jacket.html" class="vault-item-link" data-status="not for sale" data-category="jacket">
+            <a href="allegri-martin-margiela-puckered-jacquard-jacket.html" class="vault-item-link" data-status="not for sale" data-category="jacket" data-size="n/a">
                 <div class="vault-item">
                     <img src="./archive/allegri/martin margiela/puckered jacquard jacket/Artboard 1.webp" alt="puckered jacquard jacket" loading="lazy">
                 </div>
@@ -53,98 +54,110 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const filterCheckbox = document.getElementById('available-only-filter');
+            // --- Available Filter Logic ---
+            const availableCheckbox = document.getElementById('available-only-filter');
             const vaultItems = document.querySelectorAll('.vault-item-link');
+            availableCheckbox.addEventListener('change', updateFilters);
 
-            filterCheckbox.addEventListener('change', function() {
-                const showOnlyAvailable = this.checked;
+            // --- Size Filter Logic ---
+            const sizeFilterContainer = document.getElementById('size-filter');
+            const sizeCheckboxes = document.querySelectorAll('input[name="size-filter"]');
+            sizeCheckboxes.forEach(box => box.addEventListener('change', updateFilters));
+
+            function updateFilters() {
+                const showOnlyAvailable = availableCheckbox.checked;
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
                 vaultItems.forEach(item => {
                     const status = item.dataset.status;
-                    if (showOnlyAvailable && status === 'sold') {
-                        item.style.display = 'none';
-                    } else {
+                    const size = item.dataset.size;
+                    
+                    const availableMatch = !showOnlyAvailable || status !== 'sold';
+                    const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
+
+                    if (availableMatch && sizeMatch) {
                         item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
                     }
                 });
-            });
-        });
-    </script>
-    
-    <script>
-        // --- Easter Egg Framework ---
-        const easterEggs = {
-            matrix: {
-                keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'],
-                mobile: { type: 'tap_anywhere', count: 13 }
-            },
-            red_text: {
-                keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'],
-                mobile: { type: 'tap_element', elementId: 'welcome-trigger', count: 10 }
-            }
-        };
-
-        // --- Keyboard Listener (handles multiple codes) ---
-        let keyHistory = [];
-        document.addEventListener('keydown', (e) => {
-            keyHistory.push(e.key.toLowerCase());
-            if (keyHistory.length > 10) {
-                keyHistory.shift(); // Keep history to the length of the longest code
             }
 
-            for (const egg in easterEggs) {
-                const requiredSequence = easterEggs[egg].keyboard;
-                if (keyHistory.join('') === requiredSequence.join('')) {
-                    window[easterEggs[egg].callback]();
-                    keyHistory = []; // Reset history after successful entry
+            // --- Easter Egg Framework ---
+            const easterEggs = {
+                matrix: { keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'], mobile: { type: 'tap_anywhere', count: 13 }, callback: triggerMatrixRain },
+                red_text: { keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'], mobile: { type: 'tap_element', elementId: 'welcome-trigger', count: 10 }, callback: toggleRedText },
+                size_filter: { keyboard: ['arrowleft', 'arrowleft', 'arrowleft', 'arrowright'], mobile: { type: 'toggle_element', elementId: 'available-only-filter', count: 4 }, callback: toggleSizeFilter }
+            };
+
+            // Keyboard Listener
+            let keyHistory = [];
+            document.addEventListener('keydown', (e) => {
+                keyHistory.push(e.key.toLowerCase());
+                if (keyHistory.length > 10) keyHistory.shift();
+                for (const egg in easterEggs) {
+                    if (keyHistory.join('').endsWith(easterEggs[egg].keyboard.join(''))) {
+                        easterEggs[egg].callback();
+                        keyHistory = [];
+                        return;
+                    }
                 }
-            }
-        });
+            });
 
-        // --- Mobile Tap Listeners ---
-        let tapAnywhereCount = 0;
-        let lastTapAnywhere = 0;
-        const tapTimeout = 800; // ms
+            // Mobile Listeners
+            let tapAnywhereCount = 0, lastTapAnywhere = 0;
+            let tapElementCount = 0, lastTapElement = 0;
+            let toggleCount = 0, lastToggle = 0;
+            const tapTimeout = 800; // ms
 
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('a, button, input')) return;
-            if (e.target.id === easterEggs.red_text.mobile.elementId) return; // Don't count welcome taps here
-
-            const now = new Date().getTime();
-            if (now - lastTapAnywhere > tapTimeout) {
-                tapAnywhereCount = 1;
-            } else {
-                tapAnywhereCount++;
-            }
-            lastTapAnywhere = now;
-
-            if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {
-                tapAnywhereCount = 0;
-                triggerMatrixRain();
-            }
-        });
-
-        let tapElementCount = 0;
-        let lastTapElement = 0;
-        const welcomeTrigger = document.getElementById(easterEggs.red_text.mobile.elementId);
-        if (welcomeTrigger) {
-            welcomeTrigger.addEventListener('click', () => {
+            document.addEventListener('click', (e) => {
                 const now = new Date().getTime();
-                if (now - lastTapElement > tapTimeout) {
-                    tapElementCount = 1;
-                } else {
-                    tapElementCount++;
+                // Listener for tap anywhere (Matrix)
+                if (!e.target.closest('a, button, input, label')) {
+                    if (now - lastTapAnywhere > tapTimeout) tapAnywhereCount = 1; else tapAnywhereCount++;
+                    lastTapAnywhere = now;
+                    if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {
+                        tapAnywhereCount = 0;
+                        easterEggs.matrix.callback();
+                    }
                 }
-                lastTapElement = now;
-
-                if (tapElementCount >= easterEggs.red_text.mobile.count) {
-                    tapElementCount = 0;
-                    toggleRedText();
+                // Listener for welcome trigger (Red Text)
+                if (e.target.id === easterEggs.red_text.mobile.elementId) {
+                    if (now - lastTapElement > tapTimeout) tapElementCount = 1; else tapElementCount++;
+                    lastTapElement = now;
+                    if (tapElementCount >= easterEggs.red_text.mobile.count) {
+                        tapElementCount = 0;
+                        easterEggs.red_text.callback();
+                    }
                 }
             });
-        }
+            
+            // Listener for toggle checkbox (Size Filter)
+            const toggleTrigger = document.getElementById(easterEggs.size_filter.mobile.elementId);
+            if (toggleTrigger) {
+                toggleTrigger.addEventListener('change', () => {
+                    const now = new Date().getTime();
+                    if (now - lastToggle > tapTimeout * 2) toggleCount = 1; else toggleCount++;
+                    lastToggle = now;
+                    if (toggleCount >= easterEggs.size_filter.mobile.count) {
+                        toggleCount = 0;
+                        easterEggs.size_filter.callback();
+                    }
+                });
+            }
+        });
 
         // --- Easter Egg Effect Functions ---
+        function toggleSizeFilter() {
+            const filter = document.getElementById('size-filter');
+            if (filter) {
+                const isHidden = filter.style.display === 'none';
+                filter.style.display = isHidden ? 'block' : 'none';
+            }
+        }
+
+        function triggerMatrixRain() { /* ... existing function ... */ }
+        function toggleRedText() { /* ... existing function ... */ }
 
         function triggerMatrixRain() {
             if (document.querySelector('.matrix-canvas')) return;
@@ -200,11 +213,7 @@
             }
             document.body.classList.toggle('red-text-mode');
         }
-
-        // Bind callbacks to the config object for keyboard listener
-        easterEggs.matrix.callback = 'triggerMatrixRain';
-        easterEggs.red_text.callback = 'toggleRedText';
-
     </script>
+    
 </body>
 </html>
