@@ -12,10 +12,13 @@ STATIC_DIRS = ['css', 'js', 'archive', 'assets']
 # --- HTML TEMPLATES ---
 
 def create_index_html(products, stats):
+    # --- Create Product Grid Items ---
     list_items = []
     for product in products:
+        # Add data-status attribute for filtering
+        status = product.get('status', '').lower()
         list_items.append(f'''
-            <a href="{product['html_file']}" class="vault-item-link">
+            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}">
                 <div class="vault-item">
                     <img src="{product['thumbnail']}" alt="{product['product_name']}" loading="lazy">
                 </div>
@@ -23,6 +26,37 @@ def create_index_html(products, stats):
     
     stats_text = f'{stats["product_count"]} articles, {stats["last_updated"]}, {stats["total_size"]}'
 
+    # --- Filter UI and Script ---
+    filter_ui_html = '''
+        <div class="filter-controls">
+            <input type="checkbox" id="available-only-filter" name="available-only-filter">
+            <label for="available-only-filter">show only available</label>
+        </div>
+    '''
+
+    filter_script = '''
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterCheckbox = document.getElementById('available-only-filter');
+            const vaultItems = document.querySelectorAll('.vault-item-link');
+
+            filterCheckbox.addEventListener('change', function() {
+                const showOnlyAvailable = this.checked;
+
+                vaultItems.forEach(item => {
+                    const status = item.dataset.status;
+                    if (showOnlyAvailable && status === 'sold') {
+                        item.style.display = 'none';
+                    } else {
+                        item.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+    '''
+
+    # --- Final HTML Assembly ---
     return f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -44,6 +78,7 @@ def create_index_html(products, stats):
             <a href="index.html" class="active">vault</a>
             <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
         </nav>
+        {filter_ui_html}
         <div class="vault-grid">
             {'' .join(list_items)}
         </div>
@@ -54,6 +89,7 @@ def create_index_html(products, stats):
             <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
         </div>
     </footer>
+    {filter_script}
 </body>
 </html>'''
 
