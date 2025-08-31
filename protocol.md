@@ -97,7 +97,7 @@
           "details": "Implemented a checkbox on index.html that uses JavaScript to hide products with a 'sold' status, allowing users to filter the main grid."
         },
         {
-          "type": 'refactor',
+          "type": "refactor",
           "component": "build.py",
           "summary": "Extended data model with 'category' and 'size' fields.",
           "details": "Updated the build script to process new 'category' and 'size' fields from info.txt and added corresponding data attributes to each product in the HTML for future filtering enhancements."
@@ -113,6 +113,12 @@
           "component": "build.py, css/style.css",
           "summary": "Refined hidden filter UI for mobile.",
           "details": "Adjusted the CSS and HTML structure of the hidden category/size filters to improve layout on mobile devices. Wrapped checkbox/label pairs to prevent unwanted line breaks and adjusted font styles for better consistency."
+        },
+        {
+          "type": "feature",
+          "component": "build.py",
+          "summary": "Sorted index page by modification date.",
+          "details": "Updated the build script to sort products by their directory's last modification time, ensuring the most recently updated articles appear first on the homepage."
         }
       ]
     }

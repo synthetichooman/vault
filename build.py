@@ -431,7 +431,35 @@ def main():
         f.write(index_html)
     print("Generated index.html.")
 
+    # --- SEO File Generation ---
+    generate_seo_files(products, "https://hooman.kr")
+
     print("Build complete! Output is in the 'public' directory.")
+
+# --- SEO FILE GENERATION ---
+def generate_seo_files(products, domain):
+    # Create robots.txt
+    robots_content = f"""User-agent: *\nAllow: /\nSitemap: {domain}/sitemap.xml"""
+    with open(os.path.join(OUTPUT_DIR, 'robots.txt'), 'w', encoding='utf-8') as f:
+        f.write(robots_content)
+    print("Generated robots.txt.")
+
+    # Create sitemap.xml
+    sitemap_urls = []
+    sitemap_urls.append(f"    <url><loc>{domain}/</loc></url>") # Add homepage
+    for product in products:
+        url = f"{domain}/{product['html_file']}"
+        sitemap_urls.append(f"    <url><loc>{url}</loc></url>")
+    
+    sitemap_urls_string = "\n".join(sitemap_urls)
+    sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{sitemap_urls_string}
+</urlset>"""
+    with open(os.path.join(OUTPUT_DIR, 'sitemap.xml'), 'w', encoding='utf-8') as f:
+        f.write(sitemap_content)
+    print("Generated sitemap.xml.")
+
 
 if __name__ == '__main__':
     main()
