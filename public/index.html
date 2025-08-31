@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>3 articles, 2025.08.30 15:27:24, 7897KB</p>
+            <p>3 articles, 2025.08.31 14:54:13, 7933KB</p>
         </div>
     </header>
     <main class="vault">
@@ -19,19 +19,25 @@
             <a href="index.html" class="active">vault</a>
             <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
         </nav>
+        
+        <div class="filter-controls">
+            <input type="checkbox" id="available-only-filter" name="available-only-filter">
+            <label for="available-only-filter">show only available</label>
+        </div>
+    
         <div class="vault-grid">
             
-            <a href="menichetti-reberto-menichetti-joghurt.html" class="vault-item-link">
+            <a href="menichetti-reberto-menichetti-joghurt.html" class="vault-item-link" data-status="not for sale" data-category="bottom">
                 <div class="vault-item">
                     <img src="./archive/menichetti/reberto menichetti/joghurt/Artboard 1.webp" alt="joghurt" loading="lazy">
                 </div>
             </a>
-            <a href="a-poc-unknown-a-poc-inside-t-shirt.html" class="vault-item-link">
+            <a href="a-poc-dai-fujiwara-a-poc-inside-t-shirt.html" class="vault-item-link" data-status="sold" data-category="top">
                 <div class="vault-item">
-                    <img src="./archive/a-poc/unknown/a-poc inside t shirt/Artboard 1.webp" alt="a-poc inside t shirt" loading="lazy">
+                    <img src="./archive/a-poc/dai fujiwara/a-poc inside t shirt/Artboard 1.webp" alt="a-poc inside t shirt" loading="lazy">
                 </div>
             </a>
-            <a href="allegri-martin-margiela-puckered-jacquard-jacket.html" class="vault-item-link">
+            <a href="allegri-martin-margiela-puckered-jacquard-jacket.html" class="vault-item-link" data-status="not for sale" data-category="jacket">
                 <div class="vault-item">
                     <img src="./archive/allegri/martin margiela/puckered jacquard jacket/Artboard 1.webp" alt="puckered jacquard jacket" loading="lazy">
                 </div>
@@ -44,5 +50,26 @@
             <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
         </div>
     </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterCheckbox = document.getElementById('available-only-filter');
+            const vaultItems = document.querySelectorAll('.vault-item-link');
+
+            filterCheckbox.addEventListener('change', function() {
+                const showOnlyAvailable = this.checked;
+
+                vaultItems.forEach(item => {
+                    const status = item.dataset.status;
+                    if (showOnlyAvailable && status === 'sold') {
+                        item.style.display = 'none';
+                    } else {
+                        item.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+    
 </body>
 </html>

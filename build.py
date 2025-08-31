@@ -15,10 +15,11 @@ def create_index_html(products, stats):
     # --- Create Product Grid Items ---
     list_items = []
     for product in products:
-        # Add data-status attribute for filtering
+        # Add data attributes for filtering
         status = product.get('status', '').lower()
+        category = product.get('category', '').lower()
         list_items.append(f'''
-            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}">
+            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}" data-category="{category}">
                 <div class="vault-item">
                     <img src="{product['thumbnail']}" alt="{product['product_name']}" loading="lazy">
                 </div>
@@ -90,6 +91,88 @@ def create_index_html(products, stats):
         </div>
     </footer>
     {filter_script}
+    <script>
+        // Konami Code Easter Egg: Matrix Rain
+        const konamiCode = [
+            'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 
+            'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 
+            'b', 'a'
+        ];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    konamiIndex = 0;
+                    triggerMatrixRain();
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function triggerMatrixRain() {
+            const canvas = document.createElement('canvas');
+            document.body.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            canvas.style.zIndex = '9999';
+            canvas.style.pointerEvents = 'none'; // Allow clicks to pass through
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+            const alphabet = katakana + latin + nums;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const rainDrops = [];
+
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+
+            let animationFrameId;
+            const duration = 10000; // 10 seconds
+            const startTime = Date.now();
+
+            const draw = () => {
+                if (Date.now() - startTime > duration) {
+                    cancelAnimationFrame(animationFrameId);
+                    document.body.removeChild(canvas);
+                    return;
+                }
+
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0F0'; // Green text
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+                animationFrameId = requestAnimationFrame(draw);
+            };
+
+            draw();
+        }
+    </script>
 </body>
 </html>'''
 
@@ -189,7 +272,7 @@ def main():
                                                 product_info[key.strip().lower()] = value.strip()
                                 else:
                                     with open(info_path, 'w', encoding='utf-8') as f:
-                                        f.write("era: \nstatus: \n")
+                                        f.write("era: \nstatus: \ncategory: \n")
                                     print(f"Created missing 'info.txt' in {product_path}")
 
                                 images = sorted([
@@ -208,7 +291,8 @@ def main():
                                         'thumbnail': images[0],
                                         'html_file': f"{product_slug}.html",
                                         'era': product_info.get('era', ''),
-                                        'status': product_info.get('status', '')
+                                        'status': product_info.get('status', ''),
+                                        'category': product_info.get('category', 'other')
                                     }
                                     products.append(product_data)
     print(f"Found {len(products)} products.")

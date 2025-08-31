@@ -133,7 +133,7 @@ body {
 /* Main Navigation Styles */
 .main-nav {
     text-align: center;
-    margin-bottom: 40px; /* Space before the grid */
+    margin-bottom: 20px; /* Reduced space before the filter */
 }
 
 .main-nav a {
@@ -147,6 +147,25 @@ body {
 .main-nav a.active {
     text-decoration: underline;
 }
+
+/* Filter Controls */
+.filter-controls {
+    text-align: center;
+    margin-bottom: 40px; /* Same as original nav margin */
+}
+
+.filter-controls label {
+    font-size: 0.9rem;
+    color: inherit;
+    cursor: pointer;
+}
+
+.filter-controls input[type="checkbox"] {
+    margin-right: 8px;
+    /* Align checkbox with text */
+    vertical-align: middle;
+}
+
 
 /* Custom Swiper Navigation Styles */
 .swiper-button-next,

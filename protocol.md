@@ -85,6 +85,24 @@
           "details": "Guide user through creating a CNAME file, updating build.py to include it, and configuring DNS records (A, CNAME) on Gabia to point to GitHub Pages."
         }
       ]
+    },
+    {
+      "date": "2025-08-31",
+      "summary": "Client-side filtering and data model extension.",
+      "changes": [
+        {
+          "type": "feature",
+          "component": "build.py, css/style.css",
+          "summary": "Added 'show only available' checkbox filter.",
+          "details": "Implemented a checkbox on index.html that uses JavaScript to hide products with a 'sold' status, allowing users to filter the main grid."
+        },
+        {
+          "type": "refactor",
+          "component": "build.py",
+          "summary": "Extended data model with 'category' field.",
+          "details": "Updated the build script to process a new 'category' field from info.txt (top, bottom, etc.) and added a corresponding 'data-category' attribute to each product in the HTML for future filtering enhancements."
+        }
+      ]
     }
   ]
 }
