@@ -92,27 +92,86 @@ def create_index_html(products, stats):
     </footer>
     {filter_script}
     <script>
-        // Konami Code Easter Egg: Matrix Rain
+        // Konami Code Easter Egg: Matrix Rain (for Keyboard and Touch)
         const konamiCode = [
-            'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 
-            'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 
+            'arrowup', 'arrowup', 'arrowdown', 'arrowdown', 
+            'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 
             'b', 'a'
         ];
         let konamiIndex = 0;
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+        // --- Keyboard Listener ---
+        document.addEventListener('keydown', (e) => {{
+            const requiredKey = konamiCode[konamiIndex];
+            if (e.key.toLowerCase() === requiredKey) {{
                 konamiIndex++;
-                if (konamiIndex === konamiCode.length) {
+                if (konamiIndex === konamiCode.length) {{
                     konamiIndex = 0;
                     triggerMatrixRain();
-                }
-            } else {
+                }}
+            }} else {{
                 konamiIndex = 0;
-            }
-        });
+            }}
+        }});
 
-        function triggerMatrixRain() {
+        // --- Touch Gesture Listener ---
+        const touchKonamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'tap', 'tap'];
+        let touchKonamiIndex = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let lastTap = 0;
+
+        document.addEventListener('touchstart', e => {{
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }}, {{ passive: true }});
+
+        document.addEventListener('touchend', e => {{
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const requiredGesture = touchKonamiCode[touchKonamiIndex];
+            
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            const swipeThreshold = 50; // Min pixels for a swipe
+            const tapTimeThreshold = 300; // Max ms between taps
+
+            let gesture = null;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {{
+                // Horizontal swipe
+                if (Math.abs(deltaX) > swipeThreshold) {{
+                    gesture = deltaX > 0 ? 'right' : 'left';
+                }}
+            }} else {{
+                // Vertical swipe
+                if (Math.abs(deltaY) > swipeThreshold) {{
+                    gesture = deltaY > 0 ? 'down' : 'up';
+                }}
+            }}
+
+            if (!gesture) {{
+                // It's a tap
+                const now = new Date().getTime();
+                if (now - lastTap < tapTimeThreshold) {{
+                    gesture = 'tap';
+                }}
+                lastTap = now;
+            }}
+
+            if (gesture === requiredGesture) {{
+                touchKonamiIndex++;
+                if (touchKonamiIndex === touchKonamiCode.length) {{
+                    touchKonamiIndex = 0;
+                    triggerMatrixRain();
+                }}
+            }} else {{
+                touchKonamiIndex = 0;
+            }}
+        }});
+
+
+        function triggerMatrixRain() {{
             const canvas = document.createElement('canvas');
             document.body.appendChild(canvas);
             const ctx = canvas.getContext('2d');
@@ -137,20 +196,22 @@ def create_index_html(products, stats):
             const columns = canvas.width / fontSize;
             const rainDrops = [];
 
-            for (let x = 0; x < columns; x++) {
+            for (let x = 0; x < columns; x++) {{
                 rainDrops[x] = 1;
-            }
+            }}
 
             let animationFrameId;
             const duration = 10000; // 10 seconds
             const startTime = Date.now();
 
-            const draw = () => {
-                if (Date.now() - startTime > duration) {
+            const draw = () => {{
+                if (Date.now() - startTime > duration) {{
                     cancelAnimationFrame(animationFrameId);
-                    document.body.removeChild(canvas);
+                    if (document.body.contains(canvas)) {{
+                        document.body.removeChild(canvas);
+                    }}
                     return;
-                }
+                }}
 
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -158,20 +219,20 @@ def create_index_html(products, stats):
                 ctx.fillStyle = '#0F0'; // Green text
                 ctx.font = fontSize + 'px monospace';
 
-                for (let i = 0; i < rainDrops.length; i++) {
+                for (let i = 0; i < rainDrops.length; i++) {{
                     const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                     ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
 
-                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {{
                         rainDrops[i] = 0;
-                    }
+                    }}
                     rainDrops[i]++;
-                }
+                }}
                 animationFrameId = requestAnimationFrame(draw);
-            };
+            }};
 
             draw();
-        }
+        }}
     </script>
 </body>
 </html>'''
