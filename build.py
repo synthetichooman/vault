@@ -12,13 +12,16 @@ STATIC_DIRS = ['css', 'js', 'archive', 'assets']
 # --- HTML TEMPLATES ---
 
 def create_index_html(products, stats):
-    # --- Create Product Grid Items ---
+    # --- Create Product Grid Items and Extract Filter Data ---
     list_items = []
     all_sizes = set()
+    all_categories = set()
     for product in products:
         status = product.get('status', '').lower()
-        category = product.get('category', '').lower()
+        category = product.get('category', 'other').lower()
         size = product.get('size', 'n/a').lower()
+        
+        all_categories.add(category)
         if size != 'n/a':
             all_sizes.add(size)
         
@@ -39,8 +42,17 @@ def create_index_html(products, stats):
         </div>
     '''
 
+    category_filter_html = '<div id="category-filter" class="filter-controls" style="display: none;">'
+    category_filter_html += '<span class="filter-label">category</span>'
+    for cat in sorted(list(all_categories)):
+        category_filter_html += f'''
+            <input type="checkbox" id="cat-{cat}" name="category-filter" value="{cat}">
+            <label for="cat-{cat}">{cat}</label>
+        '''
+    category_filter_html += '</div>'
+
     size_filter_html = '<div id="size-filter" class="filter-controls" style="display: none;">'
-    size_filter_html += '<span class="filter-label">size:</span>'
+    size_filter_html += '<span class="filter-label">size</span>'
     for size in sorted(list(all_sizes)):
         size_filter_html += f'''
             <input type="checkbox" id="size-{size}" name="size-filter" value="{size}">
@@ -52,28 +64,29 @@ def create_index_html(products, stats):
     script_html = f'''
     <script>
         document.addEventListener('DOMContentLoaded', function() {{
-            // --- Available Filter Logic ---
-            const availableCheckbox = document.getElementById('available-only-filter');
             const vaultItems = document.querySelectorAll('.vault-item-link');
-            availableCheckbox.addEventListener('change', updateFilters);
 
-            // --- Size Filter Logic ---
-            const sizeFilterContainer = document.getElementById('size-filter');
-            const sizeCheckboxes = document.querySelectorAll('input[name="size-filter"]');
-            sizeCheckboxes.forEach(box => box.addEventListener('change', updateFilters));
+            // --- Filter Logic ---
+            const availableCheckbox = document.getElementById('available-only-filter');
+            availableCheckbox.addEventListener('change', updateFilters);
+            document.querySelectorAll('input[name="category-filter"]').forEach(box => box.addEventListener('change', updateFilters));
+            document.querySelectorAll('input[name="size-filter"]').forEach(box => box.addEventListener('change', updateFilters));
 
             function updateFilters() {{
                 const showOnlyAvailable = availableCheckbox.checked;
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
                 const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
                 vaultItems.forEach(item => {{
                     const status = item.dataset.status;
+                    const category = item.dataset.category;
                     const size = item.dataset.size;
                     
                     const availableMatch = !showOnlyAvailable || status !== 'sold';
+                    const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
                     const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
 
-                    if (availableMatch && sizeMatch) {{
+                    if (availableMatch && categoryMatch && sizeMatch) {{
                         item.style.display = 'block';
                     }} else {{
                         item.style.display = 'none';
@@ -85,7 +98,7 @@ def create_index_html(products, stats):
             const easterEggs = {{
                 matrix: {{ keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'], mobile: {{ type: 'tap_anywhere', count: 13 }}, callback: triggerMatrixRain }},
                 red_text: {{ keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'], mobile: {{ type: 'tap_element', elementId: 'welcome-trigger', count: 10 }}, callback: toggleRedText }},
-                size_filter: {{ keyboard: ['arrowleft', 'arrowleft', 'arrowleft', 'arrowright'], mobile: {{ type: 'toggle_element', elementId: 'available-only-filter', count: 4 }}, callback: toggleSizeFilter }}
+                advanced_filters: {{ keyboard: ['arrowleft', 'arrowleft', 'arrowleft', 'arrowright'], mobile: {{ type: 'toggle_element', elementId: 'available-only-filter', count: 4 }}, callback: toggleAdvancedFilters }}
             }};
 
             // Keyboard Listener
@@ -110,7 +123,6 @@ def create_index_html(products, stats):
 
             document.addEventListener('click', (e) => {{
                 const now = new Date().getTime();
-                // Listener for tap anywhere (Matrix)
                 if (!e.target.closest('a, button, input, label')) {{
                     if (now - lastTapAnywhere > tapTimeout) tapAnywhereCount = 1; else tapAnywhereCount++;
                     lastTapAnywhere = now;
@@ -119,7 +131,6 @@ def create_index_html(products, stats):
                         easterEggs.matrix.callback();
                     }}
                 }}
-                // Listener for welcome trigger (Red Text)
                 if (e.target.id === easterEggs.red_text.mobile.elementId) {{
                     if (now - lastTapElement > tapTimeout) tapElementCount = 1; else tapElementCount++;
                     lastTapElement = now;
@@ -130,27 +141,28 @@ def create_index_html(products, stats):
                 }}
             }});
             
-            // Listener for toggle checkbox (Size Filter)
-            const toggleTrigger = document.getElementById(easterEggs.size_filter.mobile.elementId);
+            const toggleTrigger = document.getElementById(easterEggs.advanced_filters.mobile.elementId);
             if (toggleTrigger) {{
                 toggleTrigger.addEventListener('change', () => {{
                     const now = new Date().getTime();
                     if (now - lastToggle > tapTimeout * 2) toggleCount = 1; else toggleCount++;
                     lastToggle = now;
-                    if (toggleCount >= easterEggs.size_filter.mobile.count) {{
+                    if (toggleCount >= easterEggs.advanced_filters.mobile.count) {{
                         toggleCount = 0;
-                        easterEggs.size_filter.callback();
+                        easterEggs.advanced_filters.callback();
                     }}
                 }});
             }}
         }});
 
         // --- Easter Egg Effect Functions ---
-        function toggleSizeFilter() {{
-            const filter = document.getElementById('size-filter');
-            if (filter) {{
-                const isHidden = filter.style.display === 'none';
-                filter.style.display = isHidden ? 'block' : 'none';
+        function toggleAdvancedFilters() {{
+            const catFilter = document.getElementById('category-filter');
+            const sizeFilter = document.getElementById('size-filter');
+            if (catFilter && sizeFilter) {{
+                const isHidden = catFilter.style.display === 'none';
+                catFilter.style.display = isHidden ? 'block' : 'none';
+                sizeFilter.style.display = isHidden ? 'block' : 'none';
             }}
         }}
 
@@ -237,6 +249,7 @@ def create_index_html(products, stats):
             <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
         </nav>
         {available_filter_html}
+        {category_filter_html}
         {size_filter_html}
         <div class="vault-grid">
             {'' .join(list_items)}
