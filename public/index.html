@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>3 articles, 2025.08.31 15:36:59, 7933KB</p>
+            <p>3 articles, 2025.08.31 15:41:36, 7933KB</p>
         </div>
     </header>
     <main class="vault">
@@ -94,65 +94,40 @@
             }
         });
 
-        // --- Touch Gesture Listener ---
-        const touchKonamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'tap', 'tap'];
-        let touchKonamiIndex = 0;
-        let touchStartX = 0;
-        let touchStartY = 0;
+        // --- Mobile 13-Tap Listener ---
+        let tapCount = 0;
         let lastTap = 0;
+        const tapThreshold = 13;
+        const tapTimeout = 800; // milliseconds
 
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
+        document.addEventListener('click', (e) => {
+            // Ignore clicks on links, buttons, or inputs
+            if (e.target.closest('a, button, input')) {
+                return;
+            }
 
-        document.addEventListener('touchend', e => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const touchEndY = e.changedTouches[0].screenY;
-            const requiredGesture = touchKonamiCode[touchKonamiIndex];
+            const now = new Date().getTime();
+            if (now - lastTap > tapTimeout) {
+                tapCount = 1; // Reset and count this tap as the first
+            } else {
+                tapCount++;
+            }
             
-            const deltaX = touchEndX - touchStartX;
-            const deltaY = touchEndY - touchStartY;
-            const swipeThreshold = 50; // Min pixels for a swipe
-            const tapTimeThreshold = 300; // Max ms between taps
+            lastTap = now;
 
-            let gesture = null;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Horizontal swipe
-                if (Math.abs(deltaX) > swipeThreshold) {
-                    gesture = deltaX > 0 ? 'right' : 'left';
-                }
-            } else {
-                // Vertical swipe
-                if (Math.abs(deltaY) > swipeThreshold) {
-                    gesture = deltaY > 0 ? 'down' : 'up';
-                }
-            }
-
-            if (!gesture) {
-                // It's a tap
-                const now = new Date().getTime();
-                if (now - lastTap < tapTimeThreshold) {
-                    gesture = 'tap';
-                }
-                lastTap = now;
-            }
-
-            if (gesture === requiredGesture) {
-                touchKonamiIndex++;
-                if (touchKonamiIndex === touchKonamiCode.length) {
-                    touchKonamiIndex = 0;
-                    triggerMatrixRain();
-                }
-            } else {
-                touchKonamiIndex = 0;
+            if (tapCount >= tapThreshold) {
+                tapCount = 0;
+                triggerMatrixRain();
             }
         });
 
 
         function triggerMatrixRain() {
+            // Prevent multiple instances
+            if (document.querySelector('.matrix-canvas')) return;
+
             const canvas = document.createElement('canvas');
+            canvas.classList.add('matrix-canvas');
             document.body.appendChild(canvas);
             const ctx = canvas.getContext('2d');
 
@@ -162,7 +137,7 @@
             canvas.style.width = '100vw';
             canvas.style.height = '100vh';
             canvas.style.zIndex = '9999';
-            canvas.style.pointerEvents = 'none'; // Allow clicks to pass through
+            canvas.style.pointerEvents = 'none';
 
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
