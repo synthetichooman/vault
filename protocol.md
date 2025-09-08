@@ -88,7 +88,7 @@
     },
     {
       "date": "2025-08-31",
-      "summary": "Client-side filtering, data model extension, and an extensible Easter egg framework.",
+      "summary": "Client-side filtering, data model extension, an extensible Easter egg framework, and SEO improvements.",
       "changes": [
         {
           "type": "feature",
@@ -119,6 +119,12 @@
           "component": "build.py",
           "summary": "Sorted index page by modification date.",
           "details": "Updated the build script to sort products by their directory's last modification time, ensuring the most recently updated articles appear first on the homepage."
+        },
+        {
+          "type": "feature",
+          "component": "build.py",
+          "summary": "Added automatic SEO file generation.",
+          "details": "Updated the build script to automatically generate `robots.txt` and a `sitemap.xml` during the build process, using the site domain `hooman.kr`. This will improve search engine visibility."
         }
       ]
     }
