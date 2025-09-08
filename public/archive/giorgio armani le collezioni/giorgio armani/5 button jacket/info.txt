@@ -1,4 +1,4 @@
-era: 
-status: 
-category: 
+era: 90s
+status: for sale @athoce.seoul
+category: jacket
 size: 
