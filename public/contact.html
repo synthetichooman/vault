@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact - hooman</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+</head>
+<body>
+    <header class="vault-header"></header>
+    <main class="vault">
+        <div class="header-spacer"></div>
+        <nav class="main-nav">
+            <a href="index.html">vault</a>
+            <a href="contact.html" class="active">contact</a>
+            <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
+        </nav>
+        <div class="contact-form-container">
+            <h2>contact</h2>
+            <div class="form-instructions">
+                <p>폼 작성 전 유의사항이나 안내 문구를 이 곳에 입력하세요. 이 문구는 contact.html 파일에서 직접 수정할 수 있습니다.</p>
+            </div>
+            <form action="https://formspree.io/f/xpwjnvwr" method="POST">
+                <div class="form-group">
+                    <label for="name">name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">contact (email or instagram)</label>
+                    <input type="text" id="contact" name="contact" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">message</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit">submit</button>
+            </form>
+        </div>
+    </main>
+    <footer class="main-footer">
+        <div class="footer-bar">
+            <p>suggestions for corrections and image redistribution are welcome</p>
+            <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
+        </div>
+    </footer>
+</body>
+</html>

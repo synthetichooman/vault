@@ -411,6 +411,14 @@ def main():
         shutil.copy(cname_path, OUTPUT_DIR)
         print("Copied CNAME file.")
 
+    # Copy other static html files
+    static_html_files = ['contact.html']
+    for html_file in static_html_files:
+        src_path = os.path.join(SRC_DIR, html_file)
+        if os.path.exists(src_path):
+            shutil.copy(src_path, OUTPUT_DIR)
+            print(f"Copied {html_file}.")
+
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(OUTPUT_DIR):
         for f in filenames:

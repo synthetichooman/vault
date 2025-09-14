@@ -1,4 +1,4 @@
-era: 2011ss
-status: not for sale
-category: top
-size: 3
+era: 
+status: 
+category: 
+size: 
