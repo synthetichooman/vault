@@ -21,7 +21,7 @@
             <div class="form-instructions">
                 <p>폼 작성 전 유의사항이나 안내 문구를 이 곳에 입력하세요. 이 문구는 contact.html 파일에서 직접 수정할 수 있습니다.</p>
             </div>
-            <form action="https://formspree.io/f/xpwjnvwr" method="POST">
+            <form id="contact-form" action="https://formspree.io/f/xpwjnvwr" method="POST">
                 <div class="form-group">
                     <label for="name">name</label>
                     <input type="text" id="name" name="name" required>
@@ -36,6 +36,10 @@
                 </div>
                 <button type="submit">submit</button>
             </form>
+            <div id="form-success-message" style="display: none; text-align: center;">
+                <p>sent</p>
+                <p style="margin-top: 20px;"><a href="javascript:history.back()" style="text-decoration: underline; color: inherit;">back</a></p>
+            </div>
         </div>
     </main>
     <footer class="main-footer">
@@ -44,5 +48,40 @@
             <p><a href="https://instagram.com/synthetic.hooman" target="_blank" rel="noopener noreferrer">instagram</a></p>
         </div>
     </footer>
+
+    <script>
+      var form = document.getElementById("contact-form");
+      var successMessage = document.getElementById("form-success-message");
+      
+      async function handleSubmit(event) {
+        event.preventDefault();
+        var data = new FormData(event.target);
+        fetch(event.target.action, {
+          method: form.method,
+          body: data,
+          headers: {
+              'Accept': 'application/json'
+          }
+        }).then(response => {
+          if (response.ok) {
+            var instructions = document.querySelector(".form-instructions");
+            var title = document.querySelector(".contact-form-container h2");
+            if(instructions) { instructions.style.display = "none"; }
+            if(title) { title.style.display = "none"; }
+            form.style.display = "none";
+            successMessage.style.display = "block";
+          } else {
+            response.json().then(data => {
+              // Optional: handle form errors from formspree
+              alert("Oops! There was a problem submitting your form");
+            })
+          }
+        }).catch(error => {
+          alert("Oops! There was a problem submitting your form");
+        });
+      }
+      form.addEventListener("submit", handleSubmit)
+    </script>
+
 </body>
 </html>
