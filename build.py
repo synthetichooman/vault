@@ -25,8 +25,11 @@ def create_index_html(products, stats):
         if size != 'n/a':
             all_sizes.add(size)
         
+        # Create a searchable string
+        search_text = f"{product['brand']} {product['designer']} {product['product_name']} {product.get('era', '')}".lower()
+
         list_items.append(f'''
-            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}" data-category="{category}" data-size="{size}">
+            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}" data-category="{category}" data-size="{size}" data-search="{search_text}">
                 <div class="vault-item">
                     <img src="{product['thumbnail']}" alt="{product['product_name']}" loading="lazy">
                 </div>
@@ -68,12 +71,16 @@ def create_index_html(products, stats):
 
             // --- Filter Logic ---
             const availableCheckbox = document.getElementById('available-only-filter');
+            const searchInput = document.getElementById('search-input');
+
             availableCheckbox.addEventListener('change', updateFilters);
+            searchInput.addEventListener('input', updateFilters);
             document.querySelectorAll('input[name="category-filter"]').forEach(box => box.addEventListener('change', updateFilters));
             document.querySelectorAll('input[name="size-filter"]').forEach(box => box.addEventListener('change', updateFilters));
 
             function updateFilters() {{
                 const showOnlyAvailable = availableCheckbox.checked;
+                const searchQuery = searchInput.value.toLowerCase();
                 const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
                 const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
@@ -81,12 +88,14 @@ def create_index_html(products, stats):
                     const status = item.dataset.status;
                     const category = item.dataset.category;
                     const size = item.dataset.size;
+                    const searchText = item.dataset.search || '';
                     
-                    const availableMatch = !showOnlyAvailable || status !== 'sold';
+                    const availableMatch = !showOnlyAvailable || !status.startsWith('sold');
+                    const searchMatch = searchText.includes(searchQuery);
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
                     const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
 
-                    if (availableMatch && categoryMatch && sizeMatch) {{
+                    if (availableMatch && searchMatch && categoryMatch && sizeMatch) {{
                         item.style.display = 'block';
                     }} else {{
                         item.style.display = 'none';
@@ -248,6 +257,9 @@ def create_index_html(products, stats):
             <a href="index.html" class="active">vault</a>
             <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
         </nav>
+        <div class="search-bar-container">
+            <input type="search" id="search-input" placeholder="search...">
+        </div>
         {available_filter_html}
         {category_filter_html}
         {size_filter_html}
