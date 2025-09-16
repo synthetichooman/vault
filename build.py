@@ -68,6 +68,7 @@ def create_index_html(products, stats):
     <script>
         document.addEventListener('DOMContentLoaded', function() {{
             const vaultItems = document.querySelectorAll('.vault-item-link');
+            const noResultsMessage = document.getElementById('no-results-message');
 
             // --- Filter Logic ---
             const availableCheckbox = document.getElementById('available-only-filter');
@@ -84,6 +85,8 @@ def create_index_html(products, stats):
                 const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
                 const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
+                let visibleItemsCount = 0;
+
                 vaultItems.forEach(item => {{
                     const status = item.dataset.status;
                     const category = item.dataset.category;
@@ -97,10 +100,13 @@ def create_index_html(products, stats):
 
                     if (availableMatch && searchMatch && categoryMatch && sizeMatch) {{
                         item.style.display = 'block';
+                        visibleItemsCount++;
                     }} else {{
                         item.style.display = 'none';
                     }}
                 }});
+
+                noResultsMessage.style.display = visibleItemsCount === 0 ? 'block' : 'none';
             }}
 
             // --- Easter Egg Framework ---
@@ -263,6 +269,7 @@ def create_index_html(products, stats):
         <div class="vault-grid">
             {'' .join(list_items)}
         </div>
+        <div id="no-results-message" style="display: none; text-align: center; padding: 40px 20px; font-size: 0.9rem; color: #888;">sell me one @hooman.log</div>
     </main>
     <div class="search-bar-container">
         <input type="search" id="search-input" placeholder="search...">
@@ -376,13 +383,14 @@ def main():
                                         f.write("era: \nstatus: \ncategory: \nsize: \n")
                                     print(f"Created missing 'info.txt' in {product_path}")
 
-                                images = sorted([
-                                    os.path.join(product_path, f).replace(SRC_DIR, '.').lstrip('/') 
-                                    for f in os.listdir(product_path) 
-                                    if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))
-                                ])
-                                
-                                if images:
+                                images_files = [f for f in os.listdir(product_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+
+                                if images_files:
+                                    absolute_image_paths = [os.path.join(product_path, f) for f in images_files]
+                                    latest_image_mtime = max(os.path.getmtime(p) for p in absolute_image_paths)
+
+                                    images = sorted([p.replace(SRC_DIR, '.').lstrip('/') for p in absolute_image_paths])
+
                                     product_slug = f"{brand}-{designer}-{product_name}".lower().replace(' ', '-')
                                     product_data = {
                                         'brand': brand,
@@ -395,7 +403,7 @@ def main():
                                         'status': product_info.get('status', ''),
                                         'category': product_info.get('category', 'other'),
                                         'size': product_info.get('size', 'n/a'),
-                                        'mtime': os.path.getmtime(product_path)
+                                        'mtime': latest_image_mtime
                                     }
                                     products.append(product_data)
     print(f"Found {len(products)} products.")

@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>8 articles, 2025.09.16 22:17:37, 24765KB</p>
+            <p>8 articles, 2025.09.16 22:31:31, 24765KB</p>
         </div>
     </header>
     <main class="vault">
@@ -44,11 +44,6 @@
         </span></div>
         <div class="vault-grid">
             
-            <a href="giorgio-armani-le-collezioni-giorgio-armani-5-button-jacket.html" class="vault-item-link" data-status="sold at @athoce.seoul, 2025" data-category="jacket" data-size="" data-search="giorgio armani le collezioni giorgio armani 5 button jacket 90s">
-                <div class="vault-item">
-                    <img src="./archive/giorgio armani le collezioni/giorgio armani/5 button jacket/Artboard 1.webp" alt="5 button jacket" loading="lazy">
-                </div>
-            </a>
             <a href="vexed-generation-joe-hunter,-adam-thrope-front-velcro-pants.html" class="vault-item-link" data-status="sold in osaka, 2024" data-category="bottom" data-size="n/a" data-search="vexed generation joe hunter, adam thrope front velcro pants 00s">
                 <div class="vault-item">
                     <img src="./archive/vexed generation/joe hunter, adam thrope/front velcro pants/아트보드 1.webp" alt="front velcro pants" loading="lazy">
@@ -62,6 +57,11 @@
             <a href="y's-yohji-yamamoto-pattern-turtleneck-top.html" class="vault-item-link" data-status="" data-category="" data-size="" data-search="y's yohji yamamoto pattern turtleneck top ">
                 <div class="vault-item">
                     <img src="./archive/y's/yohji yamamoto/pattern turtleneck top/Artboard 1.webp" alt="pattern turtleneck top" loading="lazy">
+                </div>
+            </a>
+            <a href="giorgio-armani-le-collezioni-giorgio-armani-5-button-jacket.html" class="vault-item-link" data-status="sold at @athoce.seoul, 2025" data-category="jacket" data-size="" data-search="giorgio armani le collezioni giorgio armani 5 button jacket 90s">
+                <div class="vault-item">
+                    <img src="./archive/giorgio armani le collezioni/giorgio armani/5 button jacket/Artboard 1.webp" alt="5 button jacket" loading="lazy">
                 </div>
             </a>
             <a href="issey-miyake-issey-miyake-mouth-of-truth.html" class="vault-item-link" data-status="not for sale" data-category="top" data-size="" data-search="issey miyake issey miyake mouth of truth ">
@@ -85,6 +85,7 @@
                 </div>
             </a>
         </div>
+        <div id="no-results-message" style="display: none; text-align: center; padding: 40px 20px; font-size: 0.9rem; color: #888;">sell me one @hooman.log</div>
     </main>
     <div class="search-bar-container">
         <input type="search" id="search-input" placeholder="search...">
@@ -99,6 +100,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const vaultItems = document.querySelectorAll('.vault-item-link');
+            const noResultsMessage = document.getElementById('no-results-message');
 
             // --- Filter Logic ---
             const availableCheckbox = document.getElementById('available-only-filter');
@@ -115,6 +117,8 @@
                 const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
                 const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
+                let visibleItemsCount = 0;
+
                 vaultItems.forEach(item => {
                     const status = item.dataset.status;
                     const category = item.dataset.category;
@@ -128,10 +132,13 @@
 
                     if (availableMatch && searchMatch && categoryMatch && sizeMatch) {
                         item.style.display = 'block';
+                        visibleItemsCount++;
                     } else {
                         item.style.display = 'none';
                     }
                 });
+
+                noResultsMessage.style.display = visibleItemsCount === 0 ? 'block' : 'none';
             }
 
             // --- Easter Egg Framework ---
