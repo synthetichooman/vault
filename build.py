@@ -257,16 +257,13 @@ def create_index_html(products, stats):
             <a href="index.html" class="active">vault</a>
             <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
         </nav>
-        <div class="search-bar-container">
-            <input type="search" id="search-input" placeholder="search...">
-        </div>
-        {available_filter_html}
-        {category_filter_html}
-        {size_filter_html}
         <div class="vault-grid">
             {'' .join(list_items)}
         </div>
     </main>
+    <div class="search-bar-container">
+        <input type="search" id="search-input" placeholder="search...">
+    </div>
     <footer class="main-footer">
         <div class="footer-bar">
             <p>suggestions for corrections and image redistribution are <span id="welcome-trigger">welcome</span></p>
