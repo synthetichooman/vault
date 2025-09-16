@@ -1,3 +1,3 @@
 era: 00s
-status: sold in osaka, 2924
+status: sold in osaka, 2024
 category: bottom

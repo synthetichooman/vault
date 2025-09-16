@@ -64,8 +64,10 @@
           }
         }).then(response => {
           if (response.ok) {
+            var nav = document.querySelector(".main-nav");
             var instructions = document.querySelector(".form-instructions");
             var title = document.querySelector(".contact-form-container h2");
+            if(nav) { nav.style.display = "none"; }
             if(instructions) { instructions.style.display = "none"; }
             if(title) { title.style.display = "none"; }
             form.style.display = "none";

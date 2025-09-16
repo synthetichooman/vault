@@ -106,10 +106,16 @@ body {
     object-fit: contain;
 }
 
+.article-details {
+    text-align: center; /* Center the text */
+    margin-bottom: 40px; /* Add some space at the bottom */
+}
+
 .article-details p {
-    font-size: 1rem;
-    color: #555;
-    line-height: 1.5;
+    font-size: 0.9rem; /* Unified font size */
+    color: #888;       /* Unified text color */
+    line-height: 1.6;   /* Slightly increase line height for readability */
+    margin-bottom: 4px; /* Add a small space between paragraphs */
 }
 
 /* --- Responsive Media Queries --- */

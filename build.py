@@ -7,7 +7,7 @@ from datetime import datetime
 SRC_DIR = '.'
 ARCHIVE_DIR = os.path.join(SRC_DIR, 'archive')
 OUTPUT_DIR = os.path.join(SRC_DIR, 'public')
-STATIC_DIRS = ['css', 'js', 'archive', 'assets']
+STATIC_DIRS = ['css', 'js', 'archive']
 
 # --- HTML TEMPLATES ---
 
@@ -234,7 +234,7 @@ def create_index_html(products, stats):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vault - hooman</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link rel="icon" href="/favicon.ico" sizes="any">
 </head>
 <body>
     <header class="vault-header">
@@ -281,8 +281,8 @@ def create_article_html(product):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{product['brand']} - hooman</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="icon" href="/favicon.ico" sizes="any">
 </head>
 <body>
     <main class="article">
@@ -410,6 +410,12 @@ def main():
     if os.path.exists(cname_path):
         shutil.copy(cname_path, OUTPUT_DIR)
         print("Copied CNAME file.")
+
+    # Copy favicon.ico file if it exists
+    favicon_path = os.path.join(SRC_DIR, 'favicon.ico')
+    if os.path.exists(favicon_path):
+        shutil.copy(favicon_path, OUTPUT_DIR)
+        print("Copied favicon.ico.")
 
     # Copy other static html files
     static_html_files = ['contact.html']
