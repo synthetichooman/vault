@@ -2,3 +2,5 @@ era:
 status: 
 category: 
 size: 
+update_date: 2025-10-02
+shop_link: 

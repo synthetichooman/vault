@@ -37,7 +37,7 @@ def create_index_html(products, stats):
     
     stats_text = f'{stats["product_count"]} articles, {stats["last_updated"]}, {stats["total_size"]}'
 
-    # --- Create Filter UI --- 
+    # --- Create Filter UI ---
     available_filter_html = '''
         <div class="filter-controls">
             <input type="checkbox" id="available-only-filter" name="available-only-filter">
@@ -82,8 +82,8 @@ def create_index_html(products, stats):
             function updateFilters() {{
                 const showOnlyAvailable = availableCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 
@@ -291,6 +291,16 @@ def create_article_html(product):
 
     era = product.get('era', '')
     status = product.get('status', '')
+    shop_link = product.get('shop_link', '')
+
+    details_html = f"""<p>{product['brand']}</p>
+            <p>{product['designer']}</p>
+            <p>{era}</p>
+            <p>{status}</p>"""
+
+    if shop_link:
+        details_html += f'\n            <p><a href="{shop_link}" target="_blank" rel="noopener noreferrer">buy now</a></p>'
+
 
     # NOTE: The curly braces for the Swiper JS init are escaped by doubling them (e.g., {{...}})
     return f'''<!DOCTYPE html>
@@ -323,15 +333,12 @@ def create_article_html(product):
             </div>
         </section>
         <section class="article-details">
-            <p>{product['brand']}</p>
-            <p>{product['designer']}</p>
-            <p>{era}</p>
-            <p>{status}</p>
+            {details_html}
         </section>
     </main>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-        const swiper = new Swiper('.swiper', {{
+        const swiper = new Swiper('.swiper', {{ 
             loop: true,
             navigation: {{
                 nextEl: '.swiper-button-next',
@@ -372,24 +379,38 @@ def main():
                             if os.path.isdir(product_path):
                                 info_path = os.path.join(product_path, 'info.txt')
                                 product_info = {}
+                                
+                                # Read existing info.txt
                                 if os.path.exists(info_path):
                                     with open(info_path, 'r', encoding='utf-8') as f:
                                         for line in f:
                                             if ':' in line:
                                                 key, value = line.split(':', 1)
                                                 product_info[key.strip().lower()] = value.strip()
-                                else:
-                                    with open(info_path, 'w', encoding='utf-8') as f:
-                                        f.write("era: \nstatus: \ncategory: \nsize: \n")
-                                    print(f"Created missing 'info.txt' in {product_path}")
-
-                                images_files = [f for f in os.listdir(product_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+                                
+                                images_files = sorted([f for f in os.listdir(product_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))])
 
                                 if images_files:
-                                    absolute_image_paths = [os.path.join(product_path, f) for f in images_files]
-                                    latest_image_mtime = max(os.path.getmtime(p) for p in absolute_image_paths)
+                                    # Determine update_date from the first image's modification time
+                                    first_image_path = os.path.join(product_path, images_files[0])
+                                    update_date = datetime.fromtimestamp(os.path.getmtime(first_image_path)).strftime('%Y-%m-%d')
+                                    
+                                    # Update info.txt if needed
+                                    info_changed = False
+                                    if product_info.get('update_date') != update_date:
+                                        product_info['update_date'] = update_date
+                                        info_changed = True
+                                    if 'shop_link' not in product_info:
+                                        product_info['shop_link'] = ''
+                                        info_changed = True
 
-                                    images = sorted([p.replace(SRC_DIR, '.').lstrip('/') for p in absolute_image_paths])
+                                    if info_changed:
+                                        with open(info_path, 'w', encoding='utf-8') as f:
+                                            for key, value in product_info.items():
+                                                f.write(f"{key}: {value}\n")
+                                        print(f"Updated 'info.txt' in {product_path}")
+
+                                    images = [os.path.join(product_path, f).replace(SRC_DIR, '.').lstrip('/') for f in images_files]
 
                                     product_slug = f"{brand}-{designer}-{product_name}".lower().replace(' ', '-')
                                     product_data = {
@@ -399,17 +420,13 @@ def main():
                                         'images': images,
                                         'thumbnail': images[0],
                                         'html_file': f"{product_slug}.html",
-                                        'era': product_info.get('era', ''),
-                                        'status': product_info.get('status', ''),
-                                        'category': product_info.get('category', 'other'),
-                                        'size': product_info.get('size', 'n/a'),
-                                        'mtime': latest_image_mtime
+                                        **product_info # Add all info from the txt file
                                     }
                                     products.append(product_data)
     print(f"Found {len(products)} products.")
 
-    # Sort products by modification time (newest first)
-    products.sort(key=lambda p: p['mtime'], reverse=True)
+    # Sort products by update_date (newest first)
+    products.sort(key=lambda p: p.get('update_date', '1970-01-01'), reverse=True)
 
     for product in products:
         html_content = create_article_html(product)

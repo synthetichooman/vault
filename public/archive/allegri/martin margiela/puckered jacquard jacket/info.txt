@@ -1,3 +1,5 @@
 era: 1992-1998
 status: not for sale
 category: jacket
+update_date: 2025-08-27
+shop_link: 

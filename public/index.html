@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>10 articles, 2025.10.02 21:17:35, 31551KB</p>
+            <p>10 articles, 2025.11.08 07:09:10, 31591KB</p>
         </div>
     </header>
     <main class="vault">
@@ -35,9 +35,6 @@
             <input type="checkbox" id="cat-jacket" name="category-filter" value="jacket">
             <label for="cat-jacket">jacket</label>
         </span><span class="filter-option">
-            <input type="checkbox" id="cat-other" name="category-filter" value="other">
-            <label for="cat-other">other</label>
-        </span><span class="filter-option">
             <input type="checkbox" id="cat-top" name="category-filter" value="top">
             <label for="cat-top">top</label>
         </span></div>
@@ -47,7 +44,7 @@
         </span></div>
         <div class="vault-grid">
             
-            <a href="proving-ground-4-hooman-memo.html" class="vault-item-link" data-status="" data-category="other" data-size="n/a" data-search="proving ground 4 hooman memo ">
+            <a href="proving-ground-4-hooman-memo.html" class="vault-item-link" data-status="" data-category="" data-size="" data-search="proving ground 4 hooman memo ">
                 <div class="vault-item">
                     <img src="./archive/proving ground 4/hooman/memo/1.webp" alt="memo" loading="lazy">
                 </div>
@@ -87,14 +84,14 @@
                     <img src="./archive/menichetti/reberto menichetti/joghurt/Artboard 1.webp" alt="joghurt" loading="lazy">
                 </div>
             </a>
-            <a href="allegri-martin-margiela-puckered-jacquard-jacket.html" class="vault-item-link" data-status="not for sale" data-category="jacket" data-size="n/a" data-search="allegri martin margiela puckered jacquard jacket 1992-1998">
-                <div class="vault-item">
-                    <img src="./archive/allegri/martin margiela/puckered jacquard jacket/Artboard 1.webp" alt="puckered jacquard jacket" loading="lazy">
-                </div>
-            </a>
             <a href="a-poc-dai-fujiwara-a-poc-inside-t-shirt.html" class="vault-item-link" data-status="sold" data-category="top" data-size="n/a" data-search="a-poc dai fujiwara a-poc inside t shirt 1998~">
                 <div class="vault-item">
                     <img src="./archive/a-poc/dai fujiwara/a-poc inside t shirt/Artboard 1.webp" alt="a-poc inside t shirt" loading="lazy">
+                </div>
+            </a>
+            <a href="allegri-martin-margiela-puckered-jacquard-jacket.html" class="vault-item-link" data-status="not for sale" data-category="jacket" data-size="n/a" data-search="allegri martin margiela puckered jacquard jacket 1992-1998">
+                <div class="vault-item">
+                    <img src="./archive/allegri/martin margiela/puckered jacquard jacket/Artboard 1.webp" alt="puckered jacquard jacket" loading="lazy">
                 </div>
             </a>
         </div>
@@ -127,8 +124,8 @@
             function updateFilters() {
                 const showOnlyAvailable = availableCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 

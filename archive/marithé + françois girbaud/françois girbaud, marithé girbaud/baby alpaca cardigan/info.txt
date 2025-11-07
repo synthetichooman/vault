@@ -1,3 +1,5 @@
 era: early 2000s
 status: for sale, @athoce.seoul
 category: jacket
+update_date: 2025-09-20
+shop_link: https://athoce.kr/shop/marithe-francois-girbaud-baby-alpaca-cardigan

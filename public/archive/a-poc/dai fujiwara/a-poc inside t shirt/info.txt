@@ -1,3 +1,5 @@
 era: 1998~
 status: sold
 category: top
+update_date: 2025-08-27
+shop_link: 

@@ -1,3 +1,5 @@
 era: 2006 ss rtw
 status: not for sale
 category: bottom
+update_date: 2025-08-30
+shop_link: 
