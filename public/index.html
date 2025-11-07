@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>10 articles, 2025.11.08 07:09:10, 31591KB</p>
+            <p>10 articles, 2025.11.08 07:13:27, 31591KB</p>
         </div>
     </header>
     <main class="vault">
@@ -124,8 +124,8 @@
             function updateFilters() {
                 const showOnlyAvailable = availableCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 

@@ -64,9 +64,9 @@ def create_index_html(products, stats):
     size_filter_html += '</div>'
 
     # --- Create JS ---
-    script_html = f'''
+    script_html = '''
     <script>
-        document.addEventListener('DOMContentLoaded', function() {{
+        document.addEventListener('DOMContentLoaded', function() {
             const vaultItems = document.querySelectorAll('.vault-item-link');
             const noResultsMessage = document.getElementById('no-results-message');
 
@@ -79,15 +79,15 @@ def create_index_html(products, stats):
             document.querySelectorAll('input[name="category-filter"]').forEach(box => box.addEventListener('change', updateFilters));
             document.querySelectorAll('input[name="size-filter"]').forEach(box => box.addEventListener('change', updateFilters));
 
-            function updateFilters() {{
+            function updateFilters() {
                 const showOnlyAvailable = availableCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 
-                vaultItems.forEach(item => {{
+                vaultItems.forEach(item => {
                     const status = item.dataset.status;
                     const category = item.dataset.category;
                     const size = item.dataset.size;
@@ -98,37 +98,37 @@ def create_index_html(products, stats):
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
                     const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
 
-                    if (availableMatch && searchMatch && categoryMatch && sizeMatch) {{
+                    if (availableMatch && searchMatch && categoryMatch && sizeMatch) {
                         item.style.display = 'block';
                         visibleItemsCount++;
-                    }} else {{
+                    } else {
                         item.style.display = 'none';
-                    }}
-                }});
+                    }
+                });
 
                 noResultsMessage.style.display = visibleItemsCount === 0 ? 'block' : 'none';
-            }}
+            }
 
             // --- Easter Egg Framework ---
-            const easterEggs = {{
-                matrix: {{ keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'], mobile: {{ type: 'tap_anywhere', count: 13 }}, callback: triggerMatrixRain }},
-                red_text: {{ keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'], mobile: {{ type: 'tap_element', elementId: 'welcome-trigger', count: 10 }}, callback: toggleRedText }},
-                advanced_filters: {{ keyboard: ['arrowleft', 'arrowleft', 'arrowleft', 'arrowright'], mobile: {{ type: 'toggle_element', elementId: 'available-only-filter', count: 4 }}, callback: toggleAdvancedFilters }}
-            }};
+            const easterEggs = {
+                matrix: { keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'], mobile: { type: 'tap_anywhere', count: 13 }, callback: triggerMatrixRain },
+                red_text: { keyboard: ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'a', 'b'], mobile: { type: 'tap_element', elementId: 'welcome-trigger', count: 10 }, callback: toggleRedText },
+                advanced_filters: { keyboard: ['arrowleft', 'arrowleft', 'arrowleft', 'arrowright'], mobile: { type: 'toggle_element', elementId: 'available-only-filter', count: 4 }, callback: toggleAdvancedFilters }
+            };
 
             // Keyboard Listener
             let keyHistory = [];
-            document.addEventListener('keydown', (e) => {{
+            document.addEventListener('keydown', (e) => {
                 keyHistory.push(e.key.toLowerCase());
                 if (keyHistory.length > 10) keyHistory.shift();
-                for (const egg in easterEggs) {{
-                    if (keyHistory.join('').endsWith(easterEggs[egg].keyboard.join(''))) {{
+                for (const egg in easterEggs) {
+                    if (keyHistory.join('').endsWith(easterEggs[egg].keyboard.join(''))) {
                         easterEggs[egg].callback();
                         keyHistory = [];
                         return;
-                    }}
-                }}
-            }});
+                    }
+                }
+            });
 
             // Mobile Listeners
             let tapAnywhereCount = 0, lastTapAnywhere = 0;
@@ -136,55 +136,55 @@ def create_index_html(products, stats):
             let toggleCount = 0, lastToggle = 0;
             const tapTimeout = 800; // ms
 
-            document.addEventListener('click', (e) => {{
+            document.addEventListener('click', (e) => {
                 const now = new Date().getTime();
-                if (!e.target.closest('a, button, input, label')) {{
+                if (!e.target.closest('a, button, input, label')) {
                     if (now - lastTapAnywhere > tapTimeout) tapAnywhereCount = 1; else tapAnywhereCount++;
                     lastTapAnywhere = now;
-                    if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {{
+                    if (tapAnywhereCount >= easterEggs.matrix.mobile.count) {
                         tapAnywhereCount = 0;
                         easterEggs.matrix.callback();
-                    }}
-                }}
-                if (e.target.id === easterEggs.red_text.mobile.elementId) {{
+                    }
+                }
+                if (e.target.id === easterEggs.red_text.mobile.elementId) {
                     if (now - lastTapElement > tapTimeout) tapElementCount = 1; else tapElementCount++;
                     lastTapElement = now;
-                    if (tapElementCount >= easterEggs.red_text.mobile.count) {{
+                    if (tapElementCount >= easterEggs.red_text.mobile.count) {
                         tapElementCount = 0;
                         easterEggs.red_text.callback();
-                    }}
-                }}
-            }});
+                    }
+                }
+            });
             
             const toggleTrigger = document.getElementById(easterEggs.advanced_filters.mobile.elementId);
-            if (toggleTrigger) {{
-                toggleTrigger.addEventListener('change', () => {{
+            if (toggleTrigger) {
+                toggleTrigger.addEventListener('change', () => {
                     const now = new Date().getTime();
                     if (now - lastToggle > tapTimeout * 2) toggleCount = 1; else toggleCount++;
                     lastToggle = now;
-                    if (toggleCount >= easterEggs.advanced_filters.mobile.count) {{
+                    if (toggleCount >= easterEggs.advanced_filters.mobile.count) {
                         toggleCount = 0;
                         easterEggs.advanced_filters.callback();
-                    }}
-                }});
-            }}
-        }});
+                    }
+                });
+            }
+        });
 
         // --- Easter Egg Effect Functions ---
-        function toggleAdvancedFilters() {{
+        function toggleAdvancedFilters() {
             const catFilter = document.getElementById('category-filter');
             const sizeFilter = document.getElementById('size-filter');
-            if (catFilter && sizeFilter) {{
+            if (catFilter && sizeFilter) {
                 const isHidden = catFilter.style.display === 'none';
                 catFilter.style.display = isHidden ? 'block' : 'none';
                 sizeFilter.style.display = isHidden ? 'block' : 'none';
-            }}
-        }}
+            }
+        }
 
-        function triggerMatrixRain() {{ /* ... existing function ... */ }}
-        function toggleRedText() {{ /* ... existing function ... */ }}
+        function triggerMatrixRain() { /* ... existing function ... */ }
+        function toggleRedText() { /* ... existing function ... */ }
 
-        function triggerMatrixRain() {{
+        function triggerMatrixRain() {
             if (document.querySelector('.matrix-canvas')) return;
             const canvas = document.createElement('canvas');
             canvas.classList.add('matrix-canvas');
@@ -203,41 +203,41 @@ def create_index_html(products, stats):
             const fontSize = 16;
             const columns = canvas.width / fontSize;
             const rainDrops = [];
-            for (let x = 0; x < columns; x++) {{ rainDrops[x] = 1; }}
+            for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
             let animationFrameId;
             const duration = 10000;
             const startTime = Date.now();
-            const draw = () => {{
-                if (Date.now() - startTime > duration) {{
+            const draw = () => {
+                if (Date.now() - startTime > duration) {
                     cancelAnimationFrame(animationFrameId);
                     if (document.body.contains(canvas)) document.body.removeChild(canvas);
                     return;
-                }}
+                }
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#0F0';
                 ctx.font = fontSize + 'px monospace';
-                for (let i = 0; i < rainDrops.length; i++) {{
+                for (let i = 0; i < rainDrops.length; i++) {
                     const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                     ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
                     if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
                     rainDrops[i]++;
-                }}
+                }
                 animationFrameId = requestAnimationFrame(draw);
-            }};
+            };
             draw();
-        }}
+        }
 
-        function toggleRedText() {{
+        function toggleRedText() {
             const styleId = 'red-text-easter-egg';
-            if (!document.getElementById(styleId)) {{
+            if (!document.getElementById(styleId)) {
                 const style = document.createElement('style');
                 style.id = styleId;
-                style.innerHTML = `.red-text-mode, .red-text-mode * {{ color: red !important; }}`;
+                style.innerHTML = `.red-text-mode, .red-text-mode * { color: red !important; }`;
                 document.head.appendChild(style);
-            }}
+            }
             document.body.classList.toggle('red-text-mode');
-        }}
+        }
     </script>
     '''
 
