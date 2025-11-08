@@ -28,7 +28,7 @@ def create_index_html(products, stats):
         # Create a searchable string
         search_text = f"{product['brand']} {product['designer']} {product['product_name']} {product.get('era', '')}".lower()
 
-        sold_class = 'sold-item' if status.startswith('sold') else ''
+        sold_class = 'sold-item' if 'sold' in status else ''
         list_items.append(f'''
             <a href="{product['html_file']}" class="vault-item-link {sold_class}" data-status="{status}" data-category="{category}" data-size="{size}" data-search="{search_text}">
                 <div class="vault-item">
