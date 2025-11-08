@@ -260,8 +260,7 @@ def create_index_html(products, stats):
     <main class="vault">
         <div class="header-spacer"></div>
         <nav class="main-nav">
-            <a href="index.html" class="active">vault</a>
-            <a href="https://athoce.kr" target="_blank" rel="noopener noreferrer">shop</a>
+            <a href="contact.html">recruit</a>
         </nav>
         {available_filter_html}
         {category_filter_html}
