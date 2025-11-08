@@ -1,5 +1,5 @@
 era: 2006 ss rtw
-status: not for sale
+status: available for hire, for filming or reference purposes only
 category: bottom
 update_date: 2025-08-30
 shop_link: 

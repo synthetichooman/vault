@@ -1,5 +1,5 @@
 era: 
-status: not for sale
+status: available for hire, for filming or reference purposes only
 category: top
 size: 
 update_date: 2025-09-06
