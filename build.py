@@ -28,8 +28,9 @@ def create_index_html(products, stats):
         # Create a searchable string
         search_text = f"{product['brand']} {product['designer']} {product['product_name']} {product.get('era', '')}".lower()
 
+        sold_class = 'sold-item' if status.startswith('sold') else ''
         list_items.append(f'''
-            <a href="{product['html_file']}" class="vault-item-link" data-status="{status}" data-category="{category}" data-size="{size}" data-search="{search_text}">
+            <a href="{product['html_file']}" class="vault-item-link {sold_class}" data-status="{status}" data-category="{category}" data-size="{size}" data-search="{search_text}">
                 <div class="vault-item">
                     <img src="{product['thumbnail']}" alt="{product['product_name']}" loading="lazy">
                 </div>
@@ -42,6 +43,13 @@ def create_index_html(products, stats):
         <div class="filter-controls">
             <input type="checkbox" id="available-only-filter" name="available-only-filter">
             <label for="available-only-filter">show only available</label>
+        </div>
+    '''
+
+    for_sale_filter_html = '''
+        <div class="filter-controls">
+            <input type="checkbox" id="for-sale-only-filter" name="for-sale-only-filter">
+            <label for="for-sale-only-filter">show only for sale</label>
         </div>
     '''
 
@@ -72,15 +80,18 @@ def create_index_html(products, stats):
 
             // --- Filter Logic ---
             const availableCheckbox = document.getElementById('available-only-filter');
+            const forSaleCheckbox = document.getElementById('for-sale-only-filter');
             const searchInput = document.getElementById('search-input');
 
             availableCheckbox.addEventListener('change', updateFilters);
+            forSaleCheckbox.addEventListener('change', updateFilters);
             searchInput.addEventListener('input', updateFilters);
             document.querySelectorAll('input[name="category-filter"]').forEach(box => box.addEventListener('change', updateFilters));
             document.querySelectorAll('input[name="size-filter"]').forEach(box => box.addEventListener('change', updateFilters));
 
             function updateFilters() {
                 const showOnlyAvailable = availableCheckbox.checked;
+                const showOnlyForSale = forSaleCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
                 const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
                 const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
@@ -94,11 +105,12 @@ def create_index_html(products, stats):
                     const searchText = item.dataset.search || '';
                     
                     const availableMatch = !showOnlyAvailable || !status.startsWith('sold');
+                    const forSaleMatch = !showOnlyForSale || status.includes('for sale');
                     const searchMatch = searchText.includes(searchQuery);
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
                     const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
 
-                    if (availableMatch && searchMatch && categoryMatch && sizeMatch) {
+                    if (availableMatch && forSaleMatch && searchMatch && categoryMatch && sizeMatch) {
                         item.style.display = 'block';
                         visibleItemsCount++;
                     } else {
@@ -263,6 +275,7 @@ def create_index_html(products, stats):
             <a href="contact.html">recruit</a>
         </nav>
         {available_filter_html}
+        {for_sale_filter_html}
         {category_filter_html}
         {size_filter_html}
         <div class="vault-grid">
