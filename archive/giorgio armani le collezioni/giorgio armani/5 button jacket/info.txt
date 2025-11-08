@@ -1,5 +1,5 @@
 era: 90s
-status: sold at @athoce.seoul, 2025
+status: sold, @athoce.seoul, 2025
 category: jacket
 size: 
 update_date: 2025-09-08
