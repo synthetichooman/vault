@@ -340,17 +340,17 @@ button[type="submit"]:hover {
     border-bottom-color: #333;
 }
 
-/* Blur effect for sold items */
-.vault-item-link.sold-item .vault-item img {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-}
-
-/* Remove blur on hover for better UX */
-.vault-item-link.sold-item:hover .vault-item img {
-    filter: blur(0);
-}
-webkit-backdrop-filter: blur(5px); /* For Safari support */
+/* Frosted glass effect for sold items */
+.vault-item-link.sold-item .vault-item::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    background-color: rgba(255, 255, 255, 0.4); /* Semi-transparent white overlay */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px); /* For Safari support */
     z-index: 1;
     transition: opacity 0.3s ease;
     opacity: 1;
