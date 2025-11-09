@@ -92,8 +92,8 @@ def create_index_html(products, stats):
                 const showOnlyAvailable = availableCheckbox.checked;
                 const showOnlyForSale = forSaleCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 
