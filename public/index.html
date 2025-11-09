@@ -10,7 +10,7 @@
 <body>
     <header class="vault-header">
         <div class="stats-bar">
-            <p>12 articles, 2025.11.08 19:15:39, 40649KB</p>
+            <p>12 articles, 2025.11.09 20:47:36, 40649KB</p>
         </div>
     </header>
     <main class="vault">
@@ -20,14 +20,14 @@
         </nav>
         
         <div class="filter-controls">
-            <input type="checkbox" id="available-only-filter" name="available-only-filter">
-            <label for="available-only-filter">show only available</label>
-        </div>
-    
-        
-        <div class="filter-controls">
-            <input type="checkbox" id="for-sale-only-filter" name="for-sale-only-filter">
-            <label for="for-sale-only-filter">show only for sale</label>
+            <span class="filter-option">
+                <input type="checkbox" id="available-only-filter" name="available-only-filter">
+                <label for="available-only-filter">now available</label>
+            </span>
+            <span class="filter-option">
+                <input type="checkbox" id="for-sale-only-filter" name="for-sale-only-filter">
+                <label for="for-sale-only-filter">for sale</label>
+            </span>
         </div>
     
         <div id="category-filter" class="filter-controls" style="display: none;"><span class="filter-label">category</span><span class="filter-option">
@@ -142,8 +142,8 @@
                 const showOnlyAvailable = availableCheckbox.checked;
                 const showOnlyForSale = forSaleCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 
@@ -154,7 +154,7 @@
                     const searchText = item.dataset.search || '';
                     
                     const availableMatch = !showOnlyAvailable || !status.startsWith('sold');
-                    const forSaleMatch = !showOnlyForSale || status.includes('for sale');
+                    const forSaleMatch = !showOnlyForSale || status.includes('for sale') || status.startsWith('sold');
                     const searchMatch = searchText.includes(searchQuery);
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
                     const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);

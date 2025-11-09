@@ -39,17 +39,16 @@ def create_index_html(products, stats):
     stats_text = f'{stats["product_count"]} articles, {stats["last_updated"]}, {stats["total_size"]}'
 
     # --- Create Filter UI ---
-    available_filter_html = '''
+    main_filters_html = '''
         <div class="filter-controls">
-            <input type="checkbox" id="available-only-filter" name="available-only-filter">
-            <label for="available-only-filter">show only available</label>
-        </div>
-    '''
-
-    for_sale_filter_html = '''
-        <div class="filter-controls">
-            <input type="checkbox" id="for-sale-only-filter" name="for-sale-only-filter">
-            <label for="for-sale-only-filter">show only for sale</label>
+            <span class="filter-option">
+                <input type="checkbox" id="available-only-filter" name="available-only-filter">
+                <label for="available-only-filter">now available</label>
+            </span>
+            <span class="filter-option">
+                <input type="checkbox" id="for-sale-only-filter" name="for-sale-only-filter">
+                <label for="for-sale-only-filter">for sale</label>
+            </span>
         </div>
     '''
 
@@ -93,8 +92,8 @@ def create_index_html(products, stats):
                 const showOnlyAvailable = availableCheckbox.checked;
                 const showOnlyForSale = forSaleCheckbox.checked;
                 const searchQuery = searchInput.value.toLowerCase();
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(cb => cb.value);
-                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter"]:checked')).map(cb => cb.value);
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter":checked')).map(cb => cb.value);
+                const selectedSizes = Array.from(document.querySelectorAll('input[name="size-filter":checked')).map(cb => cb.value);
 
                 let visibleItemsCount = 0;
 
@@ -105,7 +104,7 @@ def create_index_html(products, stats):
                     const searchText = item.dataset.search || '';
                     
                     const availableMatch = !showOnlyAvailable || !status.startsWith('sold');
-                    const forSaleMatch = !showOnlyForSale || status.includes('for sale');
+                    const forSaleMatch = !showOnlyForSale || status.includes('for sale') || status.startsWith('sold');
                     const searchMatch = searchText.includes(searchQuery);
                     const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
                     const sizeMatch = selectedSizes.length === 0 || selectedSizes.includes(size);
@@ -274,12 +273,11 @@ def create_index_html(products, stats):
         <nav class="main-nav">
             <a href="contact.html">recruit</a>
         </nav>
-        {available_filter_html}
-        {for_sale_filter_html}
+        {main_filters_html}
         {category_filter_html}
         {size_filter_html}
         <div class="vault-grid">
-            {'' .join(list_items)}
+            {"".join(list_items)}
         </div>
         <div id="no-results-message" style="display: none; text-align: center; padding: 40px 20px; font-size: 0.9rem; color: #888;">sell me one @hooman.log</div>
     </main>

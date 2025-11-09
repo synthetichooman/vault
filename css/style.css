@@ -65,6 +65,7 @@ body {
     cursor: pointer;
     transition: opacity 0.2s ease;
     overflow: hidden; /* Hide any part of the image that might overflow */
+    position: relative; /* Required for sold-item overlay */
 }
 
 .vault-item:hover {
@@ -348,4 +349,14 @@ button[type="submit"]:hover {
 /* Remove blur on hover for better UX */
 .vault-item-link.sold-item:hover .vault-item img {
     filter: blur(0);
+}
+webkit-backdrop-filter: blur(5px); /* For Safari support */
+    z-index: 1;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+/* Hide the overlay on hover to reveal the image */
+.vault-item-link.sold-item:hover .vault-item::before {
+    opacity: 0;
 }
