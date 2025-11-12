@@ -1,0 +1,5 @@
+era: 2011aw, "LIMO"
+status: for sale, 690,000 KRW
+category: jacket
+update_date: 2025-11-11
+shop_link:https://fruitsfamilyapp.onelink.me/Agm2/c5komm4q
