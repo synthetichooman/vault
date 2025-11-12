@@ -1,6 +1,7 @@
 import os
 import shutil
 import json
+import html
 from datetime import datetime
 
 # --- CONFIGURATION ---
@@ -259,6 +260,7 @@ def create_index_html(products, stats):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vault - hooman</title>
+    <meta name="description" content="a multidisciplinary vault of archived designs, by @hooman.log">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="/favicon.ico" sizes="any">
 </head>
@@ -295,18 +297,38 @@ def create_index_html(products, stats):
 </html>'''
 
 def create_article_html(product):
+    # --- Create dynamic meta description ---
+    # Using .get() for safety as requested
+    brand = product.get('brand', '')
+    designer = product.get('designer', '')
+    product_name = product.get('product_name', '')
+    era = product.get('era', '')
+    
+    # Generate description
+    description_parts = [f"{brand}의 '{product_name}'."]
+    if designer:
+        description_parts.append(f"{designer}의 디자인입니다.")
+    if era:
+        description_parts.append(f"{era}의 특징을 담고 있습니다.")
+    description = " ".join(description_parts)
+    
+    # Escape for HTML safety
+    safe_description = html.escape(description)
+    safe_title = f"{product_name} by {designer} - hooman" if designer else f"{product_name} - hooman"
+
     slides_html = ''
     for image_path in product['images']:
-        slides_html += f'            <div class="swiper-slide"><img src="{image_path}" alt="{product["product_name"]}"></div>\n'
+        slides_html += f'            <div class="swiper-slide"><img src="{image_path}" alt="{html.escape(product_name)}"></div>\n'
 
-    era = product.get('era', '')
     status = product.get('status', '')
     shop_link = product.get('shop_link', '')
 
-    details_html = f"""<p>{product['brand']}</p>
-            <p>{product['designer']}</p>
-            <p>{era}</p>
-            <p>{status}</p>"""
+    # Use semantic tags like <h1>
+    details_html = f"""<h1>{html.escape(product_name)}</h1>
+            <p>{html.escape(brand)}</p>
+            <p>{html.escape(designer)}</p>
+            <p>{html.escape(era)}</p>
+            <p>{html.escape(status)}</p>"""
 
     if shop_link:
         details_html += f'\n            <p><a href="{shop_link}" target="_blank" rel="noopener noreferrer">buy now</a></p>'
@@ -318,7 +340,8 @@ def create_article_html(product):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{product['brand']} - hooman</title>
+    <title>{html.escape(safe_title)}</title>
+    <meta name="description" content="{safe_description}">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="icon" href="/favicon.ico" sizes="any">
