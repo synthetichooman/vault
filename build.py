@@ -8,7 +8,7 @@ from datetime import datetime
 SRC_DIR = '.'
 ARCHIVE_DIR = os.path.join(SRC_DIR, 'archive')
 OUTPUT_DIR = os.path.join(SRC_DIR, 'public')
-STATIC_DIRS = ['css', 'js', 'archive']
+STATIC_DIRS = ['css', 'js', 'archive', 'assets']
 
 # --- HTML TEMPLATES ---
 
@@ -257,14 +257,40 @@ def create_index_html(products, stats):
     return f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
+    new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    }})(window,document,'script','dataLayer','GTM-5KXB4TML');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vault - hooman</title>
     <meta name="description" content="a multidisciplinary vault of archived designs, by @hooman.log">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hooman.kr/">
+    <meta property="og:title" content="vault - hooman">
+    <meta property="og:description" content="a multidisciplinary vault of archived designs, by @hooman.log">
+    <meta property="og:image" content="https://hooman.kr/assets/hooman-og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://hooman.kr/">
+    <meta property="twitter:title" content="vault - hooman">
+    <meta property="twitter:description" content="a multidisciplinary vault of archived designs, by @hooman.log">
+    <meta property="twitter:image" content="https://hooman.kr/assets/hooman-og-image.png">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="/favicon.ico" sizes="any">
 </head>
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5KXB4TML"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <header class="vault-header">
         <div class="stats-bar">
             <p>{stats_text}</p>
@@ -316,6 +342,13 @@ def create_article_html(product):
     safe_description = html.escape(description)
     safe_title = f"{product_name} by {designer} - hooman" if designer else f"{product_name} - hooman"
 
+    # --- Create Open Graph data ---
+    domain = "https://hooman.kr"
+    og_url = f"{domain}/{product.get('html_file', '')}"
+    # Use the full path for the OG image
+    og_image = f"{domain}/{product.get('thumbnail', '')}"
+
+
     slides_html = ''
     for image_path in product['images']:
         slides_html += f'            <div class="swiper-slide"><img src="{image_path}" alt="{html.escape(product_name)}"></div>\n'
@@ -338,15 +371,41 @@ def create_article_html(product):
     return f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
+    new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    }})(window,document,'script','dataLayer','GTM-5KXB4TML');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{html.escape(safe_title)}</title>
     <meta name="description" content="{safe_description}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="product">
+    <meta property="og:url" content="{og_url}">
+    <meta property="og:title" content="{html.escape(safe_title)}">
+    <meta property="og:description" content="{safe_description}">
+    <meta property="og:image" content="{og_image}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{og_url}">
+    <meta property="twitter:title" content="{html.escape(safe_title)}">
+    <meta property="twitter:description" content="{safe_description}">
+    <meta property="twitter:image" content="{og_image}">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link rel="icon" href="/favicon.ico" sizes="any">
 </head>
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5KXB4TML"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <main class="article">
         <header class="article-header">
             <a href="javascript:history.back()" class="back-arrow">&lt;</a>
