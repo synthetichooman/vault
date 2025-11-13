@@ -308,7 +308,7 @@ def create_index_html(products, stats):
     <main class="vault">
         <div class="header-spacer"></div>
         <nav class="main-nav">
-            <a href="contact.html">recruit</a>
+            <a href="contact.html" style="display:none;">recruit</a>
         </nav>
         {main_filters_html}
         {category_filter_html}
