@@ -351,28 +351,13 @@ button[type="submit"]:hover {
     border-bottom-color: #333;
 }
 
-/* Frosted glass effect for sold items */
-.vault-item-link.sold-item .vault-item {
-    border: 3px solid #ffffff;
-    box-sizing: border-box;
+/* Blur effect for sold items */
+.vault-item-link.sold-item .vault-item img {
+    filter: blur(2.5px);
+    transition: filter 0.3s ease;
 }
 
-.vault-item-link.sold-item .vault-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.4); /* Semi-transparent white overlay */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px); /* For Safari support */
-    z-index: 1;
-    transition: opacity 0.3s ease;
-    opacity: 1;
-}
-
-/* Hide the overlay on hover to reveal the image */
-.vault-item-link.sold-item:hover .vault-item::before {
-    opacity: 0;
+/* Remove blur on hover */
+.vault-item-link.sold-item:hover .vault-item img {
+    filter: blur(0);
 }

@@ -43,7 +43,7 @@ def create_index_html(products, stats):
     main_filters_html = '''
         <div class="filter-controls">
             <span class="filter-option">
-                <input type="checkbox" id="available-only-filter" name="available-only-filter">
+                <input type="checkbox" id="available-only-filter" name="available-only-filter" checked>
                 <label for="available-only-filter">now available</label>
             </span>
             <span class="filter-option">
@@ -88,6 +88,8 @@ def create_index_html(products, stats):
             searchInput.addEventListener('input', updateFilters);
             document.querySelectorAll('input[name="category-filter"]').forEach(box => box.addEventListener('change', updateFilters));
             document.querySelectorAll('input[name="size-filter"]').forEach(box => box.addEventListener('change', updateFilters));
+
+            updateFilters();
 
             function updateFilters() {
                 const showOnlyAvailable = availableCheckbox.checked;

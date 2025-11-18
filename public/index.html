@@ -46,7 +46,7 @@
     <!-- End Google Tag Manager (noscript) -->
     <header class="vault-header">
         <div class="stats-bar">
-            <p>14 articles, 2025.11.17 23:47:33, 44454KB</p>
+            <p>14 articles, 2025.11.18 23:38:09, 44454KB</p>
         </div>
     </header>
     <main class="vault">
@@ -57,7 +57,7 @@
         
         <div class="filter-controls">
             <span class="filter-option">
-                <input type="checkbox" id="available-only-filter" name="available-only-filter">
+                <input type="checkbox" id="available-only-filter" name="available-only-filter" checked>
                 <label for="available-only-filter">now available</label>
             </span>
             <span class="filter-option">
@@ -183,6 +183,8 @@
             searchInput.addEventListener('input', updateFilters);
             document.querySelectorAll('input[name="category-filter"]').forEach(box => box.addEventListener('change', updateFilters));
             document.querySelectorAll('input[name="size-filter"]').forEach(box => box.addEventListener('change', updateFilters));
+
+            updateFilters();
 
             function updateFilters() {
                 const showOnlyAvailable = availableCheckbox.checked;
