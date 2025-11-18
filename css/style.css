@@ -351,9 +351,14 @@ button[type="submit"]:hover {
     border-bottom-color: #333;
 }
 
-/* Blur effect for sold items */
+/* Blur effect and border for sold items */
+.vault-item-link.sold-item .vault-item {
+    border: 3px solid #ffffff;
+    box-sizing: border-box;
+}
+
 .vault-item-link.sold-item .vault-item img {
-    filter: blur(2.5px);
+    filter: blur(1px);
     transition: filter 0.3s ease;
 }
 
