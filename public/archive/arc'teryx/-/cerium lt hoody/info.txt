@@ -1,0 +1,5 @@
+era: 2019
+status: for sale, 590,000 KRW
+category: jacket
+update_date: 2025-11-19
+shop_link:https://fruitsfamilyapp.onelink.me/Agm2/2v2xd1va

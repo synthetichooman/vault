@@ -353,7 +353,7 @@ button[type="submit"]:hover {
 
 /* Blur effect and border for sold items */
 .vault-item-link.sold-item .vault-item {
-    border: 3px solid #ffffff;
+    border: 4px solid #ffffff;
     box-sizing: border-box;
 }
 

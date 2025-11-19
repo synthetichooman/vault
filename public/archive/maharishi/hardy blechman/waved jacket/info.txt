@@ -1,5 +1,5 @@
 era: early 2000s
-status: for sale, @athoce.seoul, 260,000 KRW
+status: sold. fruitsfamily
 category: jacket
 update_date: 2025-11-17
 shop_link:https://fruitsfamilyapp.onelink.me/Agm2/wxyp53kh
