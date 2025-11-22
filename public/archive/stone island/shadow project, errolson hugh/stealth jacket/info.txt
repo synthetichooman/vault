@@ -1,5 +1,5 @@
 era: 2010fw
-status: men's small, for sale, 390,000 KRW
+status: sold
 category: jacket
 update_date: 2025-11-22
 shop_link:https://fruitsfamilyapp.onelink.me/Agm2/ujjvdjiz
