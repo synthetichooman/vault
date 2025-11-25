@@ -1,0 +1,5 @@
+era: 1992-1998
+status: for sale, 540,000 KRW
+category: jacket
+update_date: 2025-11-25
+shop_link: 
