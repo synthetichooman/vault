@@ -1,0 +1,5 @@
+era: 2000 holidays
+status: for sale, 130,000 KRW
+category: top
+update_date: 2025-12-03
+shop_link: https://fruitsfamilyapp.onelink.me/Agm2/vf7en15n

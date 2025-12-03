@@ -1,5 +1,5 @@
 era: early 2000s
-status: for sale, 290,000 KRW
+status: sold, fruitsfamily, 2025
 category: jacket
 update_date: 2025-11-30
-shop_link: https://fruitsfamilyapp.onelink.me/Agm2/s037kgm1
+shop_link: 
